@@ -4,6 +4,8 @@ import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.service.PostService;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
+
 
     // BLOG001: 블로그 리스트 조회
     /* TODO: 서비스 함수 추가 및 return 해주기 */
@@ -35,12 +40,17 @@ public class PostController {
 
     // BLOG003: 블로그 작성 요청
     @PostMapping("{blog_id}")
-    public String PostBlog(@RequestBody PostRequestDto RequestDto, @PathVariable long blog_id){
-        /*service*/
-        RequestDto.setBlogId(blog_id);
-        Post post = postService.save(RequestDto);
-        return "success";
+    public String PostBlog(@RequestBody PostRequestDto RequestDto, @PathVariable long blog_id) {
+        try {
+            RequestDto.setBlogId(blog_id);
+            Post post = postService.save(RequestDto);
+            return "success";
+        } catch (Exception e) {
+            logger.error("Failed to save post", e);
+            return "Fail";
+        }
     }
+
 
     // BLOG004: 블로그 수정 요청
     @PatchMapping("{post_id}")
