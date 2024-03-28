@@ -1,27 +1,30 @@
 package com.justdo.plug.blog.domain.post.service;
 
-import com.justdo.plug.blog.domain.post.dto.PostDto;
+import com.justdo.plug.blog.domain.post.Post;
+import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.repository.PostRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
+@Transactional
 public class PostService {
-    private PostRepository postRepository;
-    @Autowired
-    public PostService(PostRepository postRepository){
+    private final PostRepository postRepository;
+    public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
     /* TODO: 서비스 로직 추가 및 return 해주기 */
-    // 블로그 리스트를 반환해주는 서비스
-    public List<PostDto> ViewList(){
-        return null;
+    // 블로그 작성
+    public Post save(PostRequestDto requestDto){
+        Post post = requestDto.toEntity();
+        return postRepository.save(post);
     }
-
-
 
 
 }

@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS post (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    like_count INT NOT NULL,
+    temporary_state BOOLEAN NOT NULL,
+    state BOOLEAN NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    blog_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL
+    );
