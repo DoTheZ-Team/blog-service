@@ -3,6 +3,7 @@ package com.justdo.plug.blog.domain.post.controller;
 import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/blog/posts/")
+@RequiredArgsConstructor
 /*BLOG API - POSTS*/
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
