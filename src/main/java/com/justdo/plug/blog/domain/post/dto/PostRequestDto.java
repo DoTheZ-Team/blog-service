@@ -1,11 +1,9 @@
 package com.justdo.plug.blog.domain.post.dto;
-
 import com.justdo.plug.blog.domain.post.Post;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+//
 @Data
-@Builder
 public class PostRequestDto {
     private String title;
     private String content;
@@ -15,14 +13,27 @@ public class PostRequestDto {
     private long member_id;
     private long blog_id;
 
-    public Post toEntity() {
-        return Post.builder()
-                .title(title)
-                .content(content)
-                .temporary_state(temporary_state)
-                .state(state)
-                .member_id(member_id)
-                .blog_id(blog_id)
-                .build();
+
+    /*POST 요청 DTO*/
+    @Builder
+    public PostRequestDto(String title, String content, boolean temporary_state, boolean state, long member_id, long blog_id){
+        this.title = title;
+        this.content = content;
+        this.temporary_state = temporary_state;
+        this.state = state;
+        this.member_id = member_id;
+        this.blog_id = blog_id;
     }
+
+    public void setBlogId(long blogId) {
+        this.blog_id = blogId;
+    }
+
+    public Post toEntity(){
+        return Post.builder().
+        title(title).content(content).
+        temporary_state(temporary_state).state(state).member_id(member_id).
+                blog_id(blog_id).build();
+    }
+
 }
