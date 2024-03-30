@@ -29,4 +29,11 @@ public class Blog extends BaseTimeEntity {
     private String background;
 
     private Long memberId;
+
+    /**
+     * update 함수
+     */
+    public void editBackgroud(String background) {
+        this.background = background;
+    }
 }
