@@ -50,8 +50,8 @@ public class S3Service {
     }
 
     // 여러 개의 이미지 업로드
-    public List<S3Result> uploadFiles(List<MultipartFile> multipartFiles) {
-        List<S3Result> fileList = new ArrayList<>();
+    public List<String> uploadFiles(List<MultipartFile> multipartFiles) {
+        List<String> fileList = new ArrayList<>();
 
         for (MultipartFile file : multipartFiles) {
             String fileName = createFileName(file.getOriginalFilename());
@@ -62,7 +62,7 @@ public class S3Service {
             try (InputStream inputStream = file.getInputStream()) {
                 amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream,
                     objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
-                fileList.add(new S3Result(amazonS3Client.getUrl(bucket, fileName).toString()));
+                fileList.add(amazonS3Client.getUrl(bucket, fileName).toString());
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "파일 업로드에 실패했습니다.");
@@ -72,7 +72,7 @@ public class S3Service {
     }
 
     // 하나의 이미지 업로드
-    public S3Result uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file) {
 
         String fileName = createFileName(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -86,7 +86,7 @@ public class S3Service {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                 "파일 업로드에 실패했습니다.");
         }
-        return new S3Result(amazonS3Client.getUrl(bucket, fileName).toString());
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     // 이미지 삭제

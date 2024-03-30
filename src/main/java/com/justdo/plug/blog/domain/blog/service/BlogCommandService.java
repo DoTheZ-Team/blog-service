@@ -20,10 +20,6 @@ public class BlogCommandService {
     private final BlogRepository blogRepository;
     private final S3Service s3Service;
 
-    // 이미지 업로드
-    public String uploadImage(MultipartFile multipartFile) {
-        return s3Service.uploadFile(multipartFile).getImgUrl();
-    }
 
     // 블로그 배경사진 수정
     public ImageResult editBackground(Long blogId, MultipartFile multipartFile) {
@@ -33,7 +29,7 @@ public class BlogCommandService {
             () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)
         );
 
-        String imageUrl = uploadImage(multipartFile);
+        String imageUrl = s3Service.uploadFile(multipartFile);
         blog.editBackgroud(imageUrl);
 
         return BlogResponse.toImageResult(imageUrl);
