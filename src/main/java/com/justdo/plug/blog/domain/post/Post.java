@@ -4,7 +4,6 @@ import com.justdo.plug.blog.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Post extends BaseTimeEntity {
 
+    @Getter
     @Id
     @GeneratedValue
     @Column(name = "post_id")

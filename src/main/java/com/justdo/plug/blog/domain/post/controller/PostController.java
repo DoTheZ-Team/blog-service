@@ -1,12 +1,14 @@
 package com.justdo.plug.blog.domain.post.controller;
 
+import com.justdo.plug.blog.domain.hashtag.service.HashtagService;
 import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.service.PostService;
+import com.justdo.plug.blog.domain.posthashtag.PostHashtag;
+import com.justdo.plug.blog.domain.posthashtag.service.PostHashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 
@@ -16,10 +18,9 @@ import java.util.List;
 /*BLOG API - POSTS*/
 public class PostController {
 
+    private final HashtagService hashtagService;
+    private final PostHashtagService postHashtagService;
     private final PostService postService;
-
-    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
-
 
     // BLOG001: 블로그 리스트 조회
     /* TODO: 서비스 함수 추가 및 return 해주기 */
@@ -39,14 +40,32 @@ public class PostController {
     // BLOG003: 블로그 작성 요청
     @PostMapping("{blog_id}")
     public String PostBlog(@RequestBody PostRequestDto RequestDto, @PathVariable long blog_id) {
-        try {
+
+            // 1. Post 에 저장
             RequestDto.setBlogId(blog_id);
             Post post = postService.save(RequestDto);
+
+            // 2. Post_Hashtag 에 저장
+            Long post_id = post.getId(); // Post 에서 post_id 받아오기
+
+            List<String> hashtags = RequestDto.getHashtags(); // 해시태그 리스트 저장(2개)
+
+
+            for (String hashtag : hashtags) {
+
+                // 해시태그 이름으로 해시태그 ID를 가져오는 메서드
+                Long hashtag_id = hashtagService.getHashtagIdByName(hashtag);
+                
+                // Post_Hashtag 엔티티 생성
+                PostHashtag postHashtag = new PostHashtag();
+                postHashtag.setPostId(post_id);
+                postHashtag.setHashtagId(hashtag_id);
+
+                /* TODO: PostHashtag 저장 */
+                // Post_Hashtag 엔티티 저장
+                postHashtagService.save(postHashtag);
+            }
             return "success";
-        } catch (Exception e) {
-            logger.error("Failed to save post", e);
-            return "Fail";
-        }
     }
 
 
