@@ -1,5 +1,7 @@
 package com.justdo.plug.blog.domain.post.controller;
 
+import com.justdo.plug.blog.domain.category.Category;
+import com.justdo.plug.blog.domain.category.service.CategoryService;
 import com.justdo.plug.blog.domain.hashtag.service.HashtagService;
 import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
@@ -21,6 +23,7 @@ public class PostController {
     private final HashtagService hashtagService;
     private final PostHashtagService postHashtagService;
     private final PostService postService;
+    private final CategoryService categoryService;
 
     // BLOG001: 블로그 리스트 조회
     /* TODO: 서비스 함수 추가 및 return 해주기 */
@@ -50,7 +53,6 @@ public class PostController {
 
             List<String> hashtags = RequestDto.getHashtags(); // 해시태그 리스트 저장(2개)
 
-
             for (String hashtag : hashtags) {
 
                 // 해시태그 이름으로 해시태그 ID를 가져오는 메서드
@@ -61,11 +63,20 @@ public class PostController {
                 postHashtag.setPostId(post_id);
                 postHashtag.setHashtagId(hashtag_id);
 
-                /* TODO: PostHashtag 저장 */
                 // Post_Hashtag 엔티티 저장
                 postHashtagService.save(postHashtag);
             }
-            return "success";
+
+            String name = RequestDto.getName(); // '카테고리 명'저장
+
+            Category category = new Category();
+            category.setPost_id(post_id);
+            category.setName(name);
+
+            categoryService.save(category);
+
+
+            return "게시글이 성공적으로 업로드 되었습니다";
     }
 
 

@@ -16,9 +16,12 @@ public class PostRequestDto {
     private long blog_id;
     @Getter
     private List<String> hashtags;
+    @Getter
+    private String name;
 
     @Builder
-    public PostRequestDto(String title, String content, boolean temporary_state, boolean state, long member_id, long blog_id, List<String> hashtags){
+    public PostRequestDto(String title, String content, boolean temporary_state, boolean state, long member_id, long blog_id, List<String> hashtags, String name){
+
         this.title = title;
         this.content = content;
         this.temporary_state = temporary_state;
@@ -26,6 +29,7 @@ public class PostRequestDto {
         this.member_id = member_id;
         this.blog_id = blog_id;
         this.hashtags = hashtags;
+        this.name = name;
     }
 
     public void setBlogId(long blogId) {
