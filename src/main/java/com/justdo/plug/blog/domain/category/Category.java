@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Category extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int category_id;
+    private Long category_id;
 
     @Column(nullable = false)
     private String name;

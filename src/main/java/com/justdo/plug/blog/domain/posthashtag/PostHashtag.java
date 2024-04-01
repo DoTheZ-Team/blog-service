@@ -16,8 +16,7 @@ public class PostHashtag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long post_hashtag_id;
-    
-    
+
     @Column(nullable = false)
     private Long post_id;
 
