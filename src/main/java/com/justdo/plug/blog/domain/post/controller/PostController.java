@@ -3,6 +3,8 @@ package com.justdo.plug.blog.domain.post.controller;
 import com.justdo.plug.blog.domain.category.Category;
 import com.justdo.plug.blog.domain.category.service.CategoryService;
 import com.justdo.plug.blog.domain.hashtag.service.HashtagService;
+import com.justdo.plug.blog.domain.photo.Photo;
+import com.justdo.plug.blog.domain.photo.service.PhotoService;
 import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.service.PostService;
@@ -24,6 +26,7 @@ public class PostController {
     private final PostHashtagService postHashtagService;
     private final PostService postService;
     private final CategoryService categoryService;
+    private final PhotoService photoService;
 
     // BLOG001: 블로그 리스트 조회
     /* TODO: 서비스 함수 추가 및 return 해주기 */
@@ -67,6 +70,7 @@ public class PostController {
                 postHashtagService.save(postHashtag);
             }
 
+            // 3. Category 저장
             String name = RequestDto.getName(); // '카테고리 명'저장
 
             Category category = new Category();
@@ -75,6 +79,14 @@ public class PostController {
 
             categoryService.save(category);
 
+            // 4. Photo 저장
+            String photo_url = RequestDto.getPhoto_url();
+
+            Photo photo = new Photo();
+            photo.setPost_id(post_id);
+            photo.setPhoto_url(photo_url);
+
+            photoService.save(photo);
 
             return "게시글이 성공적으로 업로드 되었습니다";
     }
