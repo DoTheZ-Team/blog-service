@@ -21,6 +21,6 @@ public class Category extends BaseTimeEntity{
     private String name;
 
     @Column(nullable = false)
-    private long post_id;
+    private Long post_id;
 
 }

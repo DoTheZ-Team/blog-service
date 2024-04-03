@@ -12,6 +12,13 @@ import org.springframework.stereotype.Service;
 public class PhotoService {
     private final PhotoRepository photoRepository;
 
+    public void createPhoto(String photo_url, Long post_id){
+        Photo photo = new Photo();
+        photo.setPost_id(post_id);
+        photo.setPhoto_url(photo_url);
+        save(photo);
+    }
+
     public void save(Photo photo){
         photoRepository.save(photo);
     }

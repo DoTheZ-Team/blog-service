@@ -12,8 +12,13 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    public void createCategory(String name, Long post_id){
+        Category category = new Category();
+        category.setPost_id(post_id);
+        category.setName(name);
+        save(category);
+    }
     public void save(Category category){
-
         categoryRepository.save(category);
     }
 }

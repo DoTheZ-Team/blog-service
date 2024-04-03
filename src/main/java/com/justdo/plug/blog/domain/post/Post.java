@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Post extends BaseTimeEntity {
 
-    @Getter
+
     @Id
     @GeneratedValue
     @Column(name = "post_id")

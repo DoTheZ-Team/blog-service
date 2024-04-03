@@ -1,14 +1,11 @@
 package com.justdo.plug.blog.domain.post.controller;
 
-import com.justdo.plug.blog.domain.category.Category;
 import com.justdo.plug.blog.domain.category.service.CategoryService;
 import com.justdo.plug.blog.domain.hashtag.service.HashtagService;
-import com.justdo.plug.blog.domain.photo.Photo;
 import com.justdo.plug.blog.domain.photo.service.PhotoService;
 import com.justdo.plug.blog.domain.post.Post;
 import com.justdo.plug.blog.domain.post.dto.PostRequestDto;
 import com.justdo.plug.blog.domain.post.service.PostService;
-import com.justdo.plug.blog.domain.posthashtag.PostHashtag;
 import com.justdo.plug.blog.domain.posthashtag.service.PostHashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,50 +44,27 @@ public class PostController {
     @PostMapping("{blog_id}")
     public String PostBlog(@RequestBody PostRequestDto RequestDto, @PathVariable long blog_id) {
 
-            // 1. Post 에 저장
-            RequestDto.setBlogId(blog_id);
+            // 1. Post 저장
+            RequestDto.setBlog_id(blog_id);
             Post post = postService.save(RequestDto);
 
-            // 2. Post_Hashtag 에 저장
-            Long post_id = post.getId(); // Post 에서 post_id 받아오기
+            // Post 에서 post_id 받아오기
+            Long post_id = post.getId();
 
-            List<String> hashtags = RequestDto.getHashtags(); // 해시태그 리스트 저장(2개)
-
-            for (String hashtag : hashtags) {
-
-                // 해시태그 이름으로 해시태그 ID를 가져오는 메서드
-                Long hashtag_id = hashtagService.getHashtagIdByName(hashtag);
-                
-                // Post_Hashtag 엔티티 생성
-                PostHashtag postHashtag = new PostHashtag();
-                postHashtag.setPostId(post_id);
-                postHashtag.setHashtagId(hashtag_id);
-
-                // Post_Hashtag 엔티티 저장
-                postHashtagService.save(postHashtag);
-            }
+            // 2. Post_Hashtag 저장
+            List<String> hashtags = RequestDto.getHashtags();
+            postHashtagService.createHashtag(hashtags, post_id);
 
             // 3. Category 저장
             String name = RequestDto.getName(); // '카테고리 명'저장
-
-            Category category = new Category();
-            category.setPost_id(post_id);
-            category.setName(name);
-
-            categoryService.save(category);
+            categoryService.createCategory(name, post_id);
 
             // 4. Photo 저장
             String photo_url = RequestDto.getPhoto_url();
-
-            Photo photo = new Photo();
-            photo.setPost_id(post_id);
-            photo.setPhoto_url(photo_url);
-
-            photoService.save(photo);
+            photoService.createPhoto(photo_url, post_id);
 
             return "게시글이 성공적으로 업로드 되었습니다";
     }
-
 
     // BLOG004: 블로그 수정 요청
     @PatchMapping("{post_id}")
@@ -105,6 +79,5 @@ public class PostController {
         /*service*/
         return null;
     }
-
 
 }

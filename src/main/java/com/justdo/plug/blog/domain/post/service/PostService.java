@@ -17,13 +17,9 @@ public class PostService {
 
     // 블로그 작성
     public Post save(PostRequestDto requestDto) {
-        try {
+       
             Post post = requestDto.toEntity();
             return postRepository.save(post);
-        } catch (Exception e) {
-            throw new ApiException(ErrorStatus._INTERNAL_SERVER_ERROR
-            );
-        }
     }
 
 
