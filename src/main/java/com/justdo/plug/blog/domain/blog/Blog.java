@@ -22,7 +22,8 @@ public class Blog extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    @Builder.Default
+    private String title = "블로그 제목을 입력해주세요.";
 
     private String profile;
 

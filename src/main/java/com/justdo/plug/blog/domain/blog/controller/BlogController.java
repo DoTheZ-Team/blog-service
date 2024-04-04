@@ -4,8 +4,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.service.BlogCommandService;
 import com.justdo.plug.blog.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +17,9 @@ public class BlogController {
 
     private final BlogCommandService blogCommandService;
 
-    @PatchMapping("/{blogId}/background")
-    public ApiResponse<ImageResult> uploadBackground(@PathVariable Long blogId,
+    @PostMapping("/images")
+    public ApiResponse<ImageResult> uploadBackground(
         @RequestPart(name = "imageUrl") MultipartFile multipartFile) {
-        return ApiResponse.onSuccess(blogCommandService.editBackground(blogId, multipartFile));
+        return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
     }
 }
