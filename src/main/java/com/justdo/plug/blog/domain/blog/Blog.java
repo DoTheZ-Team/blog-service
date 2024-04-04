@@ -25,6 +25,8 @@ public class Blog extends BaseTimeEntity {
     @Builder.Default
     private String title = "블로그 제목을 입력해주세요.";
 
+    private String description;
+
     private String profile;
 
     private String background;
