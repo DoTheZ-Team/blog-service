@@ -1,7 +1,8 @@
 package com.justdo.plug.blog.domain.blog.dto;
 
 import com.justdo.plug.blog.domain.blog.Blog;
-import com.justdo.plug.blog.domain.member.Member;
+import com.justdo.plug.blog.domain.member.MemberDTO;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,13 +16,13 @@ public class BlogResponse {
     @Getter
     public static class MyBlogResult {
 
-        private Member memberInfo;
+        private MemberDTO memberDTOInfo;
         private BlogInfo blogInfo;
     }
 
-    public static MyBlogResult toMyBlogResult(Member memberInfo, BlogInfo blogInfo) {
+    public static MyBlogResult toMyBlogResult(MemberDTO memberDTOInfo, BlogInfo blogInfo) {
         return MyBlogResult.builder()
-            .memberInfo(memberInfo)
+            .memberDTOInfo(memberDTOInfo)
             .blogInfo(blogInfo)
             .build();
     }
@@ -58,5 +59,23 @@ public class BlogResponse {
 
     public static ImageResult toImageResult(String imageUrl) {
         return new ImageResult(imageUrl);
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogProc {
+
+        private Long blogId;
+        private LocalDateTime createdAt;
+    }
+
+    public static BlogProc toBlogProc(Long blogId) {
+
+        return BlogProc.builder()
+            .blogId(blogId)
+            .createdAt(LocalDateTime.now())
+            .build();
     }
 }
