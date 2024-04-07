@@ -1,6 +1,7 @@
 package com.justdo.plug.blog.domain.blog.dto;
 
 import com.justdo.plug.blog.domain.blog.Blog;
+import com.justdo.plug.blog.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,18 +15,15 @@ public class BlogResponse {
     @Getter
     public static class MyBlogResult {
 
-        private MemberInfo memberInfo;
+        private Member memberInfo;
         private BlogInfo blogInfo;
     }
 
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    public static class MemberInfo {
-
-        private String nickname;
-        private String profile;
+    public static MyBlogResult toMyBlogResult(Member memberInfo, BlogInfo blogInfo) {
+        return MyBlogResult.builder()
+            .memberInfo(memberInfo)
+            .blogInfo(blogInfo)
+            .build();
     }
 
     @Builder
