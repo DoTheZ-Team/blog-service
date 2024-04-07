@@ -1,5 +1,6 @@
 package com.justdo.plug.blog.domain.blog;
 
+import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
 import com.justdo.plug.blog.domain.common.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +37,10 @@ public class Blog extends BaseTimeEntity {
     /**
      * update 함수
      */
-    public void editBackgroud(String background) {
-        this.background = background;
+    public void update(BlogRequest request) {
+        this.title = request.getTitle();
+        this.description = request.getDescription();
+        this.profile = request.getProfile();
+        this.background = request.getBackground();
     }
 }
