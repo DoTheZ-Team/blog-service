@@ -1,11 +1,8 @@
 package com.justdo.plug.blog.domain.blog.service;
 
-import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
-import com.justdo.plug.blog.global.exception.ApiException;
-import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
 import com.justdo.plug.blog.global.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,16 +19,9 @@ public class BlogCommandService {
 
 
     // 블로그 배경사진 수정
-    public ImageResult editBackground(Long blogId, MultipartFile multipartFile) {
-
-        // Blog 조회
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-            () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)
-        );
+    public ImageResult imageUpload(MultipartFile multipartFile) {
 
         String imageUrl = s3Service.uploadFile(multipartFile);
-        blog.editBackgroud(imageUrl);
-
         return BlogResponse.toImageResult(imageUrl);
     }
 }
