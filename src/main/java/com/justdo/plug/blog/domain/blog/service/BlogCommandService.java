@@ -2,6 +2,7 @@ package com.justdo.plug.blog.domain.blog.service;
 
 import static com.justdo.plug.blog.domain.member.MemberDTO.toMemberDTO;
 
+import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
@@ -38,5 +39,16 @@ public class BlogCommandService {
         blogQueryService.findById(blogId).update(request);
 
         return BlogResponse.toBlogProc(blogId);
+    }
+
+    public BlogProc createBlog(Long memberId) {
+
+        Blog blog = BlogRequest.toEntity(memberId);
+        save(blog);
+        return BlogResponse.toBlogProc(blog.getId());
+    }
+
+    public void save(Blog blog) {
+        blogRepository.save(blog);
     }
 }
