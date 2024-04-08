@@ -7,8 +7,8 @@ import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
-import com.justdo.plug.blog.domain.member.Member;
 import com.justdo.plug.blog.domain.member.MemberClient;
+import com.justdo.plug.blog.domain.member.MemberDTO;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,17 @@ public class BlogQueryService {
     public MyBlogResult getBlogInfo(Long blogId) {
 
         // 나의 블로그 정보 조회
-        Blog blog = blogRepository.findById(blogId)
-            .orElseThrow(() -> new ApiException(ErrorStatus._BLOG_NOT_FOUND));
-        BlogInfo blogInfo = toBlogInfo(blog);
+        BlogInfo blogInfo = toBlogInfo(findById(blogId));
 
         // 나의 개인 정보 조회
-        Member memberInfo = memberClient.findMember();
+        MemberDTO memberDTOInfo = memberClient.findMember();
 
-        return toMyBlogResult(memberInfo, blogInfo);
+        return toMyBlogResult(memberDTOInfo, blogInfo);
+    }
+
+    public Blog findById(Long blogId) {
+        return blogRepository.findById(blogId).orElseThrow(
+            () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)
+        );
     }
 }
