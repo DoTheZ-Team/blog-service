@@ -31,8 +31,7 @@ public class Subscription extends BaseTimeEntity {
     /**
      * update
      */
-    public Subscription changeState() {
+    public void changeState() {
         this.state = !state;
-        return this;
     }
 }

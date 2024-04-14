@@ -16,20 +16,6 @@ public class SubscriptionCommandService {
 
     private final SubscriptionRepository subscriptionRepository;
 
-    //    public SubscriptionProc subscribe(Long memberId, Long blogId) {
-//
-//        Optional<Subscription> subscription = getSubscription(memberId, blogId);
-//
-//        subscription.map(sub -> {
-//            sub.changeState();
-//            return SubscriptionResponse.toSubscriptionProc(sub);
-//        })
-//            .orElseGet(() -> {
-//                Subscription newSub = SubscriptionResponse.toEntity(memberId, blogId);
-//                save(newSub);
-//                return SubscriptionResponse.toSubscriptionProc(newSub);
-//            });
-//    }
     public SubscriptionProc subscribe(Long memberId, Long blogId) {
         return getSubscription(memberId, blogId)
             .map(this::updateSubscription)
