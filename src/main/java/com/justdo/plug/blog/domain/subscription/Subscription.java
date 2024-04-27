@@ -1,4 +1,4 @@
-package com.justdo.plug.blog.domain.subscribe;
+package com.justdo.plug.blog.domain.subscription;
 
 import com.justdo.plug.blog.domain.common.BaseTimeEntity;
 import jakarta.persistence.Entity;
@@ -15,15 +15,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Subscribe extends BaseTimeEntity {
+public class Subscription extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean state;
+    @Builder.Default
+    private boolean state = true;
 
     private Long memberId;
 
     private Long blogId;
+
+    /**
+     * update
+     */
+    public void changeState() {
+        this.state = !state;
+    }
 }

@@ -34,6 +34,15 @@ public class BlogQueryService {
         return toMyBlogResult(memberDTOInfo, blogInfo);
     }
 
+    // test code / gateway 통신 확인용 추후 삭제
+    public BlogInfo testBlogInfo(Long blogId) {
+
+        // 나의 블로그 정보 조회
+        BlogInfo blogInfo = toBlogInfo(findById(blogId));
+
+        return blogInfo;
+    }
+
     public Blog findById(Long blogId) {
         return blogRepository.findById(blogId).orElseThrow(
             () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)

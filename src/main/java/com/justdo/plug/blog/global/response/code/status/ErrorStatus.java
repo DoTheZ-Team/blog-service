@@ -21,6 +21,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // Blog 관련
     _BLOG_NOT_FOUND(HttpStatus.NOT_FOUND, "BLOG_001", "요청한 BLOG는 존재하지 않습니다."),
 
+    // JWT 관련
+    _JWT_NOT_FOUND(HttpStatus.NOT_FOUND, "JWT_001", "Header에 JWT가 존재하지 않습니다다."),
+
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3_001", "S3에 존재하지 않는 이미지입니다.");
 
