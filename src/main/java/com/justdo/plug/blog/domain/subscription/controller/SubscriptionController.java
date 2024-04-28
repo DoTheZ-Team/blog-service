@@ -59,6 +59,14 @@ public class SubscriptionController {
             SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
     }
 
+    @GetMapping("/followers")
+    public ApiResponse<BlogItemList> getFollowers(HttpServletRequest request,
+        @RequestParam(defaultValue = "0") int page) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+        return ApiResponse.onSuccess(blogQueryService.getBlogInfoList(memberId, page));
+    }
+
     @GetMapping("/subscribers")
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionTo(
         HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
@@ -72,5 +80,15 @@ public class SubscriptionController {
 
         return ApiResponse.onSuccess(
             SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
+    }
+
+    @GetMapping("/follows")
+    public ApiResponse<BlogItemList> getFollows(HttpServletRequest request,
+        @RequestParam(defaultValue = "0") int page) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+        Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
+
+        return ApiResponse.onSuccess(blogQueryService.getSubscriberBlogList(blogId, page));
     }
 }
