@@ -4,10 +4,14 @@ import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.member.MemberDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
 
 public class BlogResponse {
 
@@ -94,4 +98,55 @@ public class BlogResponse {
             .createdAt(LocalDateTime.now())
             .build();
     }
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogItem {
+
+        private Long blogId;
+        private String nickname;
+        private String title;
+        private String profile;
+    }
+
+    public static BlogItem toBlogItem(String nickname, Blog blog) {
+
+        return BlogItem.builder()
+            .blogId(blog.getId())
+            .nickname(nickname)
+            .title(blog.getTitle())
+            .profile(blog.getProfile())
+            .build();
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogItemList {
+
+        private List<BlogItem> blogItems;
+        private boolean hasNext;
+        private boolean hasFirst;
+        private boolean hasLast;
+    }
+
+    public static BlogItemList toBlogItemList(List<String> nicknames, Slice<Blog> blogs) {
+
+        List<BlogItem> blogItems = IntStream.range(0,
+                Math.min(nicknames.size(), blogs.getContent().size()))
+            .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
+            .collect(Collectors.toList());
+
+        return BlogItemList.builder()
+            .blogItems(blogItems)
+            .hasNext(blogs.hasNext())
+            .hasFirst(blogs.isFirst())
+            .hasLast(blogs.isLast())
+            .build();
+    }
+
+
 }
