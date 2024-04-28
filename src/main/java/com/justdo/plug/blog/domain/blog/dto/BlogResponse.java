@@ -99,15 +99,23 @@ public class BlogResponse {
             .build();
     }
 
+    @Schema(description = "블로그 정보 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     public static class BlogItem {
 
+        @Schema(description = "블로그 아이디")
         private Long blogId;
+
+        @Schema(description = "블로그 사용자의 닉네임")
         private String nickname;
+
+        @Schema(description = "블로그의 제목")
         private String title;
+
+        @Schema(description = "블로그 프로필")
         private String profile;
     }
 
@@ -121,15 +129,23 @@ public class BlogResponse {
             .build();
     }
 
+    @Schema(description = "블로그의 정보 목록 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     public static class BlogItemList {
 
+        @Schema(description = "블로그 정보 목록")
         private List<BlogItem> blogItems;
+
+        @Schema(description = "추가 목록이 있는 지의 여부")
         private boolean hasNext;
+
+        @Schema(description = "첫 페이지인지의 여부")
         private boolean hasFirst;
+
+        @Schema(description = "마지막 페이지인지의 여부")
         private boolean hasLast;
     }
 

@@ -44,6 +44,7 @@ public class SubscriptionResponse {
             .build();
     }
 
+    @Schema(description = "내가 구독한 블로그의 정보 응답 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor

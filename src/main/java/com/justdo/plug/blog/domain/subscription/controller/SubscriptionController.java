@@ -44,6 +44,8 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(subscriptionCommandService.subscribe(memberId, blogId));
     }
 
+    @Operation(summary = "내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionFrom(
         HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {

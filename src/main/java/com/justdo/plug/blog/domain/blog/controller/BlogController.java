@@ -63,8 +63,4 @@ public class BlogController {
         return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
     }
 
-    @GetMapping("/test/{blogId}")
-    public ApiResponse<BlogInfo> testBlog(@PathVariable(name = "blogId") Long blogId) {
-        return ApiResponse.onSuccess(blogQueryService.testBlogInfo(blogId));
-    }
 }
