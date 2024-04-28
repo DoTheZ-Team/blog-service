@@ -38,6 +38,6 @@ public class SubscriptionCommandService {
     }
 
     public Optional<Subscription> getSubscription(Long memberId, Long blogId) {
-        return subscriptionRepository.findByMemberIdAndBlogId(memberId, blogId);
+        return subscriptionRepository.findByFromMemberIdAndToBlogId(memberId, blogId);
     }
 }

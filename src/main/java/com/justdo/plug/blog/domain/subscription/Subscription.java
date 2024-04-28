@@ -24,9 +24,9 @@ public class Subscription extends BaseTimeEntity {
     @Builder.Default
     private boolean state = true;
 
-    private Long memberId;
+    private Long fromMemberId;
 
-    private Long blogId;
+    private Long toBlogId;
 
     /**
      * update
