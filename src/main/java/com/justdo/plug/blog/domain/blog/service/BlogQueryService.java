@@ -48,7 +48,7 @@ public class BlogQueryService {
         );
     }
 
-    // 구독 페이지에서 내가 구독하는 or 나를 구독하는 블로그의 정보
+    // 구독 페이지에서 내가 구독하는 블로그의 정보
     public BlogItemList getBlogInfoList(Long memberId, int page) {
 
         // 내가 구독한 블로그의 아이디 목록
@@ -66,6 +66,34 @@ public class BlogQueryService {
 
         return BlogResponse.toBlogItemList(memberNicknames, blogs);
 
+    }
+
+    // 구독 페이지에서 나를 구독하는 블로그의 정보
+    public BlogItemList getSubscriberBlogList(Long blogId, int page) {
+
+        // 나를 구독한 블로그의 사용자 아이디 목록
+        List<Long> subscriberIds = subscriptionQueryService.getSubscriberBlogIdList(blogId, page);
+
+        // 타블로그의 회원 목록
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
+        Slice<Blog> blogs = blogRepository.findSubscriberIdList(subscriberIds, pageRequest);
+
+        List<String> memberNicknames = getMemberNicknames(blogs);
+
+        return BlogResponse.toBlogItemList(memberNicknames, blogs);
+
+    }
+
+    private List<String> getMemberNicknames(Slice<Blog> blogs) {
+
+        List<Long> memberIdList = blogs.stream()
+            .map(Blog::getMemberId)
+            .toList();
+        return memberClient.findMemberNicknames(memberIdList);
+    }
+
+    public Long findBlogIdByMemberId(Long memberId) {
+        return blogRepository.findByMemberId(memberId).getId();
     }
 
 }

@@ -11,4 +11,9 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
 
     @Query("SELECT b FROM Blog b WHERE b.id in :blogIdList")
     Slice<Blog> findBlogIdList(List<Long> blogIdList, PageRequest pageRequest);
+
+    @Query("SELECT b FROM Blog b WHERE b.memberId in :memberIdList")
+    Slice<Blog> findSubscriberIdList(List<Long> memberIdList, PageRequest pageRequest);
+
+    Blog findByMemberId(Long memberId);
 }

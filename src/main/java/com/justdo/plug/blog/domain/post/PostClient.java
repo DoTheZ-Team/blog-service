@@ -15,4 +15,7 @@ public interface PostClient {
 
     @PostMapping("/preview")
     PostItemList findSubscriptionFrom(@RequestBody List<Long> blogIdList, @RequestParam int page);
+
+    @PostMapping("/preview/subscribers")
+    PostItemList findSubscriptionTo(@RequestBody List<Long> memberIdList, @RequestParam int page);
 }

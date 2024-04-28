@@ -11,4 +11,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     Optional<Subscription> findByFromMemberIdAndToBlogId(Long fromMemberId, Long toBlogId);
 
     List<Subscription> findAllByFromMemberId(Long fromMemberId, PageRequest pageRequest);
+
+    List<Subscription> findAllByToBlogId(Long toBlogId, PageRequest pageRequest);
 }

@@ -58,4 +58,19 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(
             SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
     }
+
+    @GetMapping("/subscribers")
+    public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionTo(
+        HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+        Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
+
+        BlogItemList blogInfoList = blogQueryService.getSubscriberBlogList(blogId, page);
+        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostTo(
+            blogId, page);
+
+        return ApiResponse.onSuccess(
+            SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
+    }
 }
