@@ -44,7 +44,7 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(subscriptionCommandService.subscribe(memberId, blogId));
     }
 
-    @Operation(summary = "내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
+    @Operation(summary = "내가 구독한 블로그와 포스트 정보 모두 조회", description = "내가 구독한 블로그와 포스트를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionFrom(
@@ -59,6 +59,8 @@ public class SubscriptionController {
             SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
     }
 
+    @Operation(summary = "내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/followers")
     public ApiResponse<BlogItemList> getFollowers(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
@@ -67,6 +69,20 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(blogQueryService.getBlogInfoList(memberId, page));
     }
 
+    @Operation(summary = "내가 구독한 블로그의 포스트 정보 조회", description = "내가 구독한 블로그의 포스트 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
+    @GetMapping("/followers/posts")
+    public ApiResponse<PostItemList> getFollowersPosts(HttpServletRequest request,
+        @RequestParam(defaultValue = "0") int page) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+        return ApiResponse.onSuccess(
+            subscriptionQueryService.getSubscriptionPostFrom(memberId, page));
+    }
+
+
+    @Operation(summary = "나를 구독한 블로그와 포스트 모두 정보 조회", description = "나를 구독한 블로그와 포스트 정보를 모두 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/subscribers")
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionTo(
         HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
@@ -82,6 +98,8 @@ public class SubscriptionController {
             SubscriptionResponse.toSubscriptionResult(blogInfoList, postItemList));
     }
 
+    @Operation(summary = "나를 구독한 블로그 정보 조회", description = "나를 구독한 블로그 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/follows")
     public ApiResponse<BlogItemList> getFollows(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
@@ -90,5 +108,18 @@ public class SubscriptionController {
         Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
 
         return ApiResponse.onSuccess(blogQueryService.getSubscriberBlogList(blogId, page));
+    }
+
+    @Operation(summary = "나를 구독한 블로그의 포스트 정보 조회", description = "나를 구독한 블로그의 포스트 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
+    @GetMapping("/follows/posts")
+    public ApiResponse<PostItemList> getFollowsPosts(HttpServletRequest request,
+        @RequestParam(defaultValue = "0") int page) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+        Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
+
+        return ApiResponse.onSuccess(subscriptionQueryService.getSubscriptionPostTo(
+            blogId, page));
     }
 }

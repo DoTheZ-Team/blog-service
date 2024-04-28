@@ -39,7 +39,7 @@ public class SubscriptionQueryService {
 
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
 
-        return subscriptionRepository.findAllByFromMemberId(memberId, pageRequest)
+        return subscriptionRepository.findAllByFromMemberIdAndStateIsTrue(memberId, pageRequest)
             .stream()
             .map(Subscription::getToBlogId)
             .toList();
@@ -49,7 +49,7 @@ public class SubscriptionQueryService {
     public List<Long> getSubscriberBlogIdList(Long blogId, int page) {
 
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
-        return subscriptionRepository.findAllByToBlogId(blogId, pageRequest)
+        return subscriptionRepository.findAllByToBlogIdAndStateIsTrue(blogId, pageRequest)
             .stream()
             .map(Subscription::getFromMemberId)
             .toList();
