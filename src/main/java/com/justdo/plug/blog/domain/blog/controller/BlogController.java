@@ -1,7 +1,6 @@
 package com.justdo.plug.blog.domain.blog.controller;
 
 import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
-import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfo;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
@@ -63,8 +62,4 @@ public class BlogController {
         return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
     }
 
-    @GetMapping("/test/{blogId}")
-    public ApiResponse<BlogInfo> testBlog(@PathVariable(name = "blogId") Long blogId) {
-        return ApiResponse.onSuccess(blogQueryService.testBlogInfo(blogId));
-    }
 }
