@@ -1,4 +1,4 @@
-name: Glue Gateway Server CI/CD
+name: Glue Blog Server CI/CD
 
 on:
   push:
