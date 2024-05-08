@@ -24,7 +24,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          ./gradlew build \
+          ./gradlew build -i \
             -PAWS_BUCKET=${{ secrets.AWS_BUCKET }} \
             -PAWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
             -PAWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
