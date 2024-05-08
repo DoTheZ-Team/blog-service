@@ -5,6 +5,11 @@ spring:
     active: prod
   config:
     import: optional:configserver:http://glue-config.glue-service.svc.cluster.local:8888
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 cloud:
   aws:
