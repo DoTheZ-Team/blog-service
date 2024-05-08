@@ -26,8 +26,8 @@ cloud:
 
 application:
   config:
-    auths-url: http://glue-auth.glue-service.svc.cluster.local:8080/auths
-    posts-url: http://glue-post.glue-service.svc.cluster.local:8082/posts
+    auths-url: ${AUTH_URL}
+    posts-url: ${POST_URL}
 
 jwt:
   secret: ${JWT_SECRET}

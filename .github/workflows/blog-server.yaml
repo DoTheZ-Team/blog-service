@@ -23,7 +23,17 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew build \
+            -DAWS_BUCKET=${{ secrets.AWS_BUCKET }} \
+            -DAWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
+            -DAWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
+            -DAUTH_URL=${{ secrets.AUTH_URL }} \
+            -DPOST_URL=${{ secrets.POST_URL }} \
+            -DJWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -DDB_URL=${{ secrets.DB_URL }} \
+            -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
 
       - name: Login KakaoCloud
         uses: docker/login-action@v2
@@ -39,16 +49,6 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.GLUE_PROJECT }}/glue-repository/glue-blog:${{ github.sha }}
-          build-args: |
-            AWS_BUCKET=${{ secrets.AWS_BUCKET }}
-            AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
-            AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
-            AUTH_URL=${{ secrets.AUTH_URL }}
-            POST_URL=${{ secrets.POST_URL }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            DB_URL=${{ secrets.DB_URL }}
-            DB_USERNAME=${{ secrets.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
   update-manifest-state:
     runs-on: ubuntu-latest
