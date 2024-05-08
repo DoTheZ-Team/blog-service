@@ -4,4 +4,25 @@ spring:
   profiles:
     active: prod
   config:
-    import: optional:configserver:http://glue-blog.glue-service.svc.cluster.local:8888
+    import: optional:configserver:http://glue-config.glue-service.svc.cluster.local:8888
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+application:
+  config:
+    auths-url: ${AUTH_URL}
+    posts-url: ${POST_URL}
+
+jwt:
+  secret: ${JWT_SECRET}

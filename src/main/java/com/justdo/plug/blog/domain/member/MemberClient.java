@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "member-service", url = "${application.config.members-url}", configuration = {
+@FeignClient(name = "auth-service", url = "${application.config.auths-url}", configuration = {
     FeignConfig.class})
 public interface MemberClient {
 
