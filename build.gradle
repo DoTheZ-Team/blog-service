@@ -25,17 +25,6 @@ ext {
 	set('springCloudVersion', "2023.0.0")
 }
 
-// Gradle 프로퍼티 설정
-project.ext {
-	DB_URL= System.getenv('DB_URL')
-	DB_USERNAME = System.getenv('DB_USERNAME')
-	DB_PASSWORD = System.getenv('DB_PASSWORD')
-	AWS_BUCKET = System.getenv('AWS_BUCKET')
-	AWS_ACCESS_KEY = System.getenv('AWS_ACCESS_KEY')
-	AWS_SECRET_KEY = System.getenv('AWS_SECRET_KEY')
-	JWT_SECRET = System.getenv('JWT_SECRET')
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
