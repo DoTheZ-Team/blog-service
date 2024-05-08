@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-@FeignClient(name = "AUTH-SERVICE", configuration = {FeignConfig.class})
+@FeignClient(name = "auth-service", url = "${application.config.auths-url}", configuration = {
+    FeignConfig.class})
 public interface MemberClient {
 
-    @GetMapping("/auths")
+    @GetMapping
     MemberDTO findMember();
 
-    @PutMapping("/auths")
+    @PutMapping
     void updateMember(@RequestBody MemberDTO memberDTO);
 
-    @PostMapping("/auths/blogs")
+    @PostMapping("/blogs")
     List<String> findMemberNicknames(@RequestBody List<Long> memberIdList);
 }
