@@ -23,17 +23,15 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: |
-          ./gradlew build -i \
-            -PAWS_BUCKET=${{ secrets.AWS_BUCKET }} \
-            -PAWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-            -PAWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
-            -PAUTH_URL=${{ secrets.AUTH_URL }} \
-            -PPOST_URL=${{ secrets.POST_URL }} \
-            -PJWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -PDB_URL=${{ secrets.DB_URL }} \
-            -PDB_USERNAME=${{ secrets.DB_USERNAME }} \
-            -PDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+        run: ./gradlew build -i
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Login KakaoCloud
         uses: docker/login-action@v2
