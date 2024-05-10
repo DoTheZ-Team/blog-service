@@ -66,12 +66,9 @@ public class BlogController {
     }
 
     @Operation(summary = "게시글 검색 후 해당 블로그 보기 요청", description = "검색한 게시글의 블로그 정보를 조회합니다.")
-    @Parameters({
-        @Parameter(name = "blogIdList", description = "블로그 아이디 목록", example = "1", in = ParameterIn.QUERY),
-        @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
-    })
-    @GetMapping("/search")
-    public BlogInfoList searchBlog(@RequestParam("blogIdList") List<Long> blogIdList,
+    @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
+    @PostMapping("/search")
+    public BlogInfoList searchBlog(@RequestBody List<Long> blogIdList,
         @RequestParam(value = "page", defaultValue = "0") int page) {
 
         return blogQueryService.searchBlogs(blogIdList, page);
