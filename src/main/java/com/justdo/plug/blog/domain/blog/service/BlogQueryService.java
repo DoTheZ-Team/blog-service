@@ -7,6 +7,7 @@ import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
@@ -16,6 +17,7 @@ import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -94,6 +96,18 @@ public class BlogQueryService {
 
     public Long findBlogIdByMemberId(Long memberId) {
         return blogRepository.findByMemberId(memberId).getId();
+    }
+
+    /**
+     * Blog Search Result
+     */
+    public BlogInfoList searchBlogs(List<Long> blogIdList, int page) {
+
+        PageRequest pageRequest = PageRequest.of(page, 12, Sort.by("createdAt"));
+
+        Page<Blog> blogList = blogRepository.findAllByBlogList(blogIdList, pageRequest);
+
+        return BlogResponse.toBlogInfoList(blogList);
     }
 
 }

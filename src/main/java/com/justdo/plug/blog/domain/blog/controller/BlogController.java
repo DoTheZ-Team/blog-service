@@ -1,6 +1,7 @@
 package com.justdo.plug.blog.domain.blog.controller;
 
 import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
@@ -9,8 +10,10 @@ import com.justdo.plug.blog.domain.blog.service.BlogQueryService;
 import com.justdo.plug.blog.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -60,6 +63,15 @@ public class BlogController {
     public ApiResponse<BlogProc> createBlog(@RequestParam Long memberId) {
 
         return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
+    }
+
+    @Operation(summary = "게시글 검색 후 해당 블로그 보기 요청", description = "검색한 게시글의 블로그 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
+    @PostMapping("/search")
+    public BlogInfoList searchBlog(@RequestBody List<Long> blogIdList,
+        @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        return blogQueryService.searchBlogs(blogIdList, page);
     }
 
 }
