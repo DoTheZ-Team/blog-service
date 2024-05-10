@@ -50,4 +50,14 @@ public class PostResponse {
         private boolean hasLast;
     }
 
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class BlogPostItem {
+
+        private List<PostItem> postItems;
+        private List<String> hashtagNames;
+    }
+
 }
