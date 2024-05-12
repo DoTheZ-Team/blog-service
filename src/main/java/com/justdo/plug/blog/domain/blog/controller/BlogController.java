@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,10 +66,11 @@ public class BlogController {
         return ApiResponse.onSuccess(blogCommandService.updateBlog(request, blogId));
     }
 
-    @Operation(summary = "이미지 업로드 API - Glue Service에서 사용하는 이미지 업로드 API 입니다.", description = "Blog, Post, Member 서버에서 이미지 업로드 시 사용합니다.")
-    @PostMapping("/images")
+    @Operation(summary = "이미지 Upload API - Glue Service에서 사용하는 이미지 업로드 API 입니다.", description = "Blog, Post, Member 서버에서 이미지 업로드 시 사용합니다.")
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<ImageResult> uploadImage(
-        @RequestPart(name = "imageUrl") MultipartFile multipartFile) {
+        @Parameter(name = "multipartFile", description = "multipart/form-data 형식의 이미지를 전달받습니다.")
+        @RequestPart(name = "multipartFile") MultipartFile multipartFile) {
         return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
     }
 
