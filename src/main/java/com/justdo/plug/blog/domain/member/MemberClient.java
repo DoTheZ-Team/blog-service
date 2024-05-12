@@ -4,6 +4,7 @@ import com.justdo.plug.blog.global.config.FeignConfig;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,9 @@ public interface MemberClient {
 
     @GetMapping
     MemberDTO findMember();
+
+    @GetMapping("/blogs/{memberId}")
+    String findMemberName(@PathVariable Long memberId);
 
     @PutMapping
     void updateMember(@RequestBody MemberDTO memberDTO);

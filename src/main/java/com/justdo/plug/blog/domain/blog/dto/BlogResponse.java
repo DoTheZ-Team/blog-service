@@ -2,6 +2,7 @@ package com.justdo.plug.blog.domain.blog.dto;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.member.MemberDTO;
+import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -204,6 +205,27 @@ public class BlogResponse {
             .hasNext(blogs.hasNext())
             .hasFirst(blogs.isFirst())
             .hasLast(blogs.isLast())
+            .build();
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogPage {
+
+        private BlogInfo blogInfo;
+        private BlogPostItem blogPostItem;
+        private String memberName;
+    }
+
+    public static BlogPage toBlogpage(BlogInfo blogInfo, BlogPostItem blogPostItem,
+        String memberName) {
+
+        return BlogPage.builder()
+            .blogInfo(blogInfo)
+            .blogPostItem(blogPostItem)
+            .memberName(memberName)
             .build();
     }
 
