@@ -3,19 +3,25 @@ package com.justdo.plug.blog.domain.blog.service;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfo;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toBlogInfo;
+import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toBlogpage;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
 import com.justdo.plug.blog.domain.member.MemberDTO;
+import com.justdo.plug.blog.domain.post.PostClient;
+import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
 import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -28,8 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlogQueryService {
 
     private final BlogRepository blogRepository;
-    private final MemberClient memberClient;
     private final SubscriptionQueryService subscriptionQueryService;
+    private final MemberClient memberClient;
+    private final PostClient postClient;
 
     public MyBlogResult getBlogInfo(Long blogId) {
 
@@ -96,4 +103,26 @@ public class BlogQueryService {
         return blogRepository.findByMemberId(memberId).getId();
     }
 
+    /**
+     * Blog Search Result
+     */
+    public BlogInfoList searchBlogs(List<Long> blogIdList, int page) {
+
+        PageRequest pageRequest = PageRequest.of(page, 12, Sort.by("createdAt"));
+
+        Page<Blog> blogList = blogRepository.findAllByBlogList(blogIdList, pageRequest);
+
+        return BlogResponse.toBlogInfoList(blogList);
+    }
+
+    public BlogPage findBlogPage(Long blogId) {
+
+        Blog blog = findById(blogId);
+
+        BlogInfo blogInfo = toBlogInfo(blog);
+        BlogPostItem blogPostItem = postClient.findBlogPostItem(blogId);
+        String memberName = memberClient.findMemberName(blog.getMemberId());
+
+        return toBlogpage(blogInfo, blogPostItem, memberName);
+    }
 }

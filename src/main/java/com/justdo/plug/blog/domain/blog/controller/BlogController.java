@@ -1,6 +1,8 @@
 package com.justdo.plug.blog.domain.blog.controller;
 
 import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
@@ -11,7 +13,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,34 +36,51 @@ public class BlogController {
     private final BlogCommandService blogCommandService;
     private final BlogQueryService blogQueryService;
 
-    @Operation(summary = "블로그 이미지 업로드", description = "블로그의 프로필 & 배경사진 이미지를 업로드합니다.")
-    @PostMapping("/images")
-    public ApiResponse<ImageResult> uploadImage(
-        @RequestPart(name = "imageUrl") MultipartFile multipartFile) {
-        return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
+    @Operation(summary = "회원 가입 - 회원 가입 시 자동으로 블로그 생성을 요청합니다.", description = "Open feign 요청 / 사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
+    @PostMapping
+    public ApiResponse<BlogProc> createBlog(@RequestParam Long memberId) {
+
+        return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
     }
 
-    @Operation(summary = "사용자 및 블로그 정보 조회", description = "사용자 및 블로그 개인 정보를 조회합니다.")
+    @Operation(summary = "블로그 페이지 - 블로그 페이지를 조회합니다.", description = "Blog 정보, 최신 4개의 Post, MemberName을 반환합니다.")
+    @GetMapping("/{blogId}")
+    public ApiResponse<BlogPage> getBlogPage(@PathVariable Long blogId) {
+
+        return ApiResponse.onSuccess(blogQueryService.findBlogPage(blogId));
+    }
+
+    @Operation(summary = "마이 페이지 - 사용자 및 블로그 정보를 조회합니다.", description = "마이페이지에 보여줄 사용자 및 블로그 개인 정보를 조회합니다.")
     @Parameter(name = "blogId", description = "블로그 Id, Path Variable입니다.", required = true, example = "1", in = ParameterIn.PATH)
     @GetMapping("/mypage/{blogId}")
     public ApiResponse<MyBlogResult> myBlog(@PathVariable(name = "blogId") Long blogId) {
         return ApiResponse.onSuccess(blogQueryService.getBlogInfo(blogId));
     }
 
-    @Operation(summary = "사용자 및 블로그 정보 수정", description = "사용자 및 블로그 정보를 수정합니다.")
+    @Operation(summary = "마이 페이지 - 사용자 및 블로그 정보를 수정합니다.", description = "마이페이지에서 사용자 및 블로그 정보를 수정합니다.")
     @Parameter(name = "blogId", description = "블로그 Id, Path Variable입니다.", required = true, example = "1", in = ParameterIn.PATH)
-    @PatchMapping("/{blogId}")
+    @PatchMapping("/mypage/{blogId}")
     public ApiResponse<BlogProc> updateBlog(@RequestBody BlogRequest request,
         @PathVariable(name = "blogId") Long blogId) {
 
         return ApiResponse.onSuccess(blogCommandService.updateBlog(request, blogId));
     }
 
-    @Operation(summary = "블로그 생성 요청", description = "사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
-    @PostMapping
-    public ApiResponse<BlogProc> createBlog(@RequestParam Long memberId) {
+    @Operation(summary = "이미지 Upload API - Glue Service에서 사용하는 이미지 업로드 API 입니다.", description = "Blog, Post, Member 서버에서 이미지 업로드 시 사용합니다.")
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<ImageResult> uploadImage(
+        @Parameter(name = "multipartFile", description = "multipart/form-data 형식의 이미지를 전달받습니다.")
+        @RequestPart(name = "multipartFile") MultipartFile multipartFile) {
+        return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
+    }
 
-        return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
+    @Operation(summary = "검색 페이지 - 게시글 검색 후 '블로그 보기'를 요청합니다.", description = "검색한 게시글의 블로그 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
+    @PostMapping("/search")
+    public BlogInfoList searchBlog(@RequestBody List<Long> blogIdList,
+        @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        return blogQueryService.searchBlogs(blogIdList, page);
     }
 
 }

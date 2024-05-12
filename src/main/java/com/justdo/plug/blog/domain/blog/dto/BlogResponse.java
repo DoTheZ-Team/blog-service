@@ -2,6 +2,7 @@ package com.justdo.plug.blog.domain.blog.dto;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.member.MemberDTO;
+import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
 public class BlogResponse {
@@ -63,6 +65,48 @@ public class BlogResponse {
             .build();
     }
 
+    @Schema(description = "블로그 정보 응답 페이징 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogInfoList {
+
+        @Schema(description = "블로그 정보 목록")
+        private List<BlogInfo> blogInfoList;
+
+        @Schema(description = "페이징된 리스트의 항목 개수")
+        private Integer listSize;
+
+        @Schema(description = "총 페이징 수")
+        private Integer totalPage;
+
+        @Schema(description = "전체 데이터의 개수")
+        private Long totalElements;
+
+        @Schema(description = "첫 페이지의 여부")
+        private Boolean isFirst;
+
+        @Schema(description = "마지막 페이지의 여부")
+        private Boolean isLast;
+    }
+
+    public static BlogInfoList toBlogInfoList(Page<Blog> blogs) {
+
+        List<BlogInfo> blogInfoList = blogs.getContent()
+            .stream()
+            .map(BlogResponse::toBlogInfo)
+            .toList();
+
+        return BlogInfoList.builder()
+            .blogInfoList(blogInfoList)
+            .listSize(blogInfoList.size())
+            .totalPage(blogs.getTotalPages())
+            .isFirst(blogs.isFirst())
+            .isLast(blogs.isLast())
+            .build();
+    }
+
     @Schema(description = "이미지 응답 DTO")
     @AllArgsConstructor
     @NoArgsConstructor
@@ -99,7 +143,7 @@ public class BlogResponse {
             .build();
     }
 
-    @Schema(description = "블로그 정보 DTO")
+    @Schema(description = "구독 페이지 블로그 정보 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -129,7 +173,7 @@ public class BlogResponse {
             .build();
     }
 
-    @Schema(description = "블로그의 정보 목록 DTO")
+    @Schema(description = "구독 페이지 블로그의 정보 목록 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -161,6 +205,27 @@ public class BlogResponse {
             .hasNext(blogs.hasNext())
             .hasFirst(blogs.isFirst())
             .hasLast(blogs.isLast())
+            .build();
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogPage {
+
+        private BlogInfo blogInfo;
+        private BlogPostItem blogPostItem;
+        private String memberName;
+    }
+
+    public static BlogPage toBlogpage(BlogInfo blogInfo, BlogPostItem blogPostItem,
+        String memberName) {
+
+        return BlogPage.builder()
+            .blogInfo(blogInfo)
+            .blogPostItem(blogPostItem)
+            .memberName(memberName)
             .build();
     }
 
