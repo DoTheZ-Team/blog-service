@@ -1,9 +1,9 @@
 package com.justdo.plug.blog.global.utils;
 
 import static com.justdo.plug.blog.global.utils.JwtProperties.HEADER_AUTHORIZATION;
+import static com.justdo.plug.blog.global.utils.JwtProperties.MEMBER_ID;
 import static com.justdo.plug.blog.global.utils.JwtProperties.TOKEN_PREFIX;
 import static com.justdo.plug.blog.global.utils.JwtProperties.TOKEN_SPLIT;
-import static com.justdo.plug.blog.global.utils.JwtProperties.USER_ID;
 
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
@@ -48,7 +48,7 @@ public class JwtProvider {
     public Long validateToken(String accessToken) {
         try {
             return Jwts.parser().verifyWith(key).build().parseSignedClaims(accessToken)
-                .getPayload().get(USER_ID, Long.class);
+                    .getPayload().get(MEMBER_ID, Long.class);
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             throw new JwtException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
