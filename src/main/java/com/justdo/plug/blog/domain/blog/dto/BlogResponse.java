@@ -30,9 +30,9 @@ public class BlogResponse {
 
     public static MyBlogResult toMyBlogResult(MemberDTO memberDTOInfo, BlogInfo blogInfo) {
         return MyBlogResult.builder()
-            .memberDTOInfo(memberDTOInfo)
-            .blogInfo(blogInfo)
-            .build();
+                .memberDTOInfo(memberDTOInfo)
+                .blogInfo(blogInfo)
+                .build();
     }
 
     @Schema(description = "블로그 정보 응답 DTO")
@@ -58,11 +58,11 @@ public class BlogResponse {
     public static BlogInfo toBlogInfo(Blog blog) {
 
         return BlogInfo.builder()
-            .title(blog.getTitle())
-            .description(blog.getDescription())
-            .profile(blog.getProfile())
-            .background(blog.getBackground())
-            .build();
+                .title(blog.getTitle())
+                .description(blog.getDescription())
+                .profile(blog.getProfile())
+                .background(blog.getBackground())
+                .build();
     }
 
     @Schema(description = "블로그 정보 응답 페이징 DTO")
@@ -94,17 +94,17 @@ public class BlogResponse {
     public static BlogInfoList toBlogInfoList(Page<Blog> blogs) {
 
         List<BlogInfo> blogInfoList = blogs.getContent()
-            .stream()
-            .map(BlogResponse::toBlogInfo)
-            .toList();
+                .stream()
+                .map(BlogResponse::toBlogInfo)
+                .toList();
 
         return BlogInfoList.builder()
-            .blogInfoList(blogInfoList)
-            .listSize(blogInfoList.size())
-            .totalPage(blogs.getTotalPages())
-            .isFirst(blogs.isFirst())
-            .isLast(blogs.isLast())
-            .build();
+                .blogInfoList(blogInfoList)
+                .listSize(blogInfoList.size())
+                .totalPage(blogs.getTotalPages())
+                .isFirst(blogs.isFirst())
+                .isLast(blogs.isLast())
+                .build();
     }
 
     @Schema(description = "이미지 응답 DTO")
@@ -138,9 +138,9 @@ public class BlogResponse {
     public static BlogProc toBlogProc(Long blogId) {
 
         return BlogProc.builder()
-            .blogId(blogId)
-            .createdAt(LocalDateTime.now())
-            .build();
+                .blogId(blogId)
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 
     @Schema(description = "구독 페이지 블로그 정보 DTO")
@@ -166,11 +166,11 @@ public class BlogResponse {
     public static BlogItem toBlogItem(String nickname, Blog blog) {
 
         return BlogItem.builder()
-            .blogId(blog.getId())
-            .nickname(nickname)
-            .title(blog.getTitle())
-            .profile(blog.getProfile())
-            .build();
+                .blogId(blog.getId())
+                .nickname(nickname)
+                .title(blog.getTitle())
+                .profile(blog.getProfile())
+                .build();
     }
 
     @Schema(description = "구독 페이지 블로그의 정보 목록 DTO")
@@ -196,16 +196,16 @@ public class BlogResponse {
     public static BlogItemList toBlogItemList(List<String> nicknames, Slice<Blog> blogs) {
 
         List<BlogItem> blogItems = IntStream.range(0,
-                Math.min(nicknames.size(), blogs.getContent().size()))
-            .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
-            .collect(Collectors.toList());
+                        Math.min(nicknames.size(), blogs.getContent().size()))
+                .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
+                .collect(Collectors.toList());
 
         return BlogItemList.builder()
-            .blogItems(blogItems)
-            .hasNext(blogs.hasNext())
-            .hasFirst(blogs.isFirst())
-            .hasLast(blogs.isLast())
-            .build();
+                .blogItems(blogItems)
+                .hasNext(blogs.hasNext())
+                .hasFirst(blogs.isFirst())
+                .hasLast(blogs.isLast())
+                .build();
     }
 
     @Builder
@@ -220,13 +220,35 @@ public class BlogResponse {
     }
 
     public static BlogPage toBlogpage(BlogInfo blogInfo, BlogPostItem blogPostItem,
-        String memberName) {
+            String memberName) {
 
         return BlogPage.builder()
-            .blogInfo(blogInfo)
-            .blogPostItem(blogPostItem)
-            .memberName(memberName)
-            .build();
+                .blogInfo(blogInfo)
+                .blogPostItem(blogPostItem)
+                .memberName(memberName)
+                .build();
+    }
+
+    @Schema(description = "댓글에 작성된 블로그의 정보 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogComment {
+
+        @Schema(description = "블로그 프로필 이미지")
+        private String profile;
+
+        @Schema(description = "블로그 제목")
+        private String title;
+    }
+
+    public static BlogComment toBlogComment(Blog blog) {
+
+        return BlogComment.builder()
+                .profile(blog.getProfile())
+                .title(blog.getTitle())
+                .build();
     }
 
 

@@ -1,6 +1,7 @@
 package com.justdo.plug.blog.domain.blog.controller;
 
 import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogComment;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
@@ -61,7 +62,7 @@ public class BlogController {
     @Parameter(name = "blogId", description = "블로그 Id, Path Variable입니다.", required = true, example = "1", in = ParameterIn.PATH)
     @PatchMapping("/mypage/{blogId}")
     public ApiResponse<BlogProc> updateBlog(@RequestBody BlogRequest request,
-        @PathVariable(name = "blogId") Long blogId) {
+            @PathVariable(name = "blogId") Long blogId) {
 
         return ApiResponse.onSuccess(blogCommandService.updateBlog(request, blogId));
     }
@@ -69,8 +70,8 @@ public class BlogController {
     @Operation(summary = "이미지 Upload API - Glue Service에서 사용하는 이미지 업로드 API 입니다.", description = "Blog, Post, Member 서버에서 이미지 업로드 시 사용합니다.")
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<ImageResult> uploadImage(
-        @Parameter(name = "multipartFile", description = "multipart/form-data 형식의 이미지를 전달받습니다.")
-        @RequestPart(name = "multipartFile") MultipartFile multipartFile) {
+            @Parameter(name = "multipartFile", description = "multipart/form-data 형식의 이미지를 전달받습니다.")
+            @RequestPart(name = "multipartFile") MultipartFile multipartFile) {
         return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
     }
 
@@ -78,9 +79,16 @@ public class BlogController {
     @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
     @PostMapping("/search")
     public BlogInfoList searchBlog(@RequestBody List<Long> blogIdList,
-        @RequestParam(value = "page", defaultValue = "0") int page) {
+            @RequestParam(value = "page", defaultValue = "0") int page) {
 
         return blogQueryService.searchBlogs(blogIdList, page);
+    }
+
+    @Operation(summary = "댓글 페이지 - 댓글에 작성된 블로그의 정보를 조회합니다.", description = "Open feign 요청 - 댓글에 작성된 블로그의 정보를 전달합니다.")
+    @PostMapping("/comments")
+    public List<BlogComment> findBlogInfoToComment(@RequestBody List<Long> memberIdList) {
+
+        return blogQueryService.findBlogComments(memberIdList);
     }
 
 }

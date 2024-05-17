@@ -8,6 +8,7 @@ import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogComment;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
@@ -124,5 +125,14 @@ public class BlogQueryService {
         String memberName = memberClient.findMemberName(blog.getMemberId());
 
         return toBlogpage(blogInfo, blogPostItem, memberName);
+    }
+
+    public List<BlogComment> findBlogComments(List<Long> memberIdList) {
+
+        List<Blog> blogList = blogRepository.findAllByMemberIdList(memberIdList);
+
+        return blogList.stream()
+                .map(BlogResponse::toBlogComment)
+                .toList();
     }
 }
