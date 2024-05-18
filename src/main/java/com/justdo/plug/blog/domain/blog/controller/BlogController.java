@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "Blog API")
+@Tag(name = "Blog 관련 API입니다.")
 @RestController
 @RequestMapping("/blogs")
 @RequiredArgsConstructor
@@ -36,14 +36,14 @@ public class BlogController {
     private final BlogCommandService blogCommandService;
     private final BlogQueryService blogQueryService;
 
-    @Operation(summary = "회원 가입 - 회원 가입 시 자동으로 블로그 생성을 요청합니다.", description = "Open feign 요청 / 사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
+    @Operation(summary = "회원 가입 - Open feign 요청 (회원 가입 시 자동으로 블로그 생성을 요청합니다.)", description = "사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
     @PostMapping
     public ApiResponse<BlogProc> createBlog(@RequestParam Long memberId) {
 
         return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
     }
 
-    @Operation(summary = "블로그 페이지 - 블로그 페이지를 조회합니다.", description = "Blog 정보, 최신 4개의 Post, MemberName을 반환합니다.")
+    @Operation(summary = "블로그 페이지 - Blog 정보, 최신 4개의 Post, MemberName을 조회합니다..", description = "블로그 페이지를 조회합니다")
     @GetMapping("/{blogId}")
     public ApiResponse<BlogPage> getBlogPage(@PathVariable Long blogId) {
 
@@ -74,8 +74,8 @@ public class BlogController {
         return ApiResponse.onSuccess(blogCommandService.imageUpload(multipartFile));
     }
 
-    @Operation(summary = "검색 페이지 - 게시글 검색 후 '블로그 보기'를 요청합니다.", description = "검색한 게시글의 블로그 정보를 조회합니다.")
-    @Parameter(name = "page", description = "페이징 번호", example = "0", in = ParameterIn.QUERY)
+    @Operation(summary = "검색 페이지 - Open Feign을 통해 사용되는 API입니다. ('블로그 보기'를 통해 블로그 정보를 조회합니다.)", description = "검색한 게시글의 블로그 정보를 조회합니다.")
+    @Parameter(name = "page", description = "페이징 번호(page), Query String입니다.", example = "0", in = ParameterIn.QUERY)
     @PostMapping("/search")
     public BlogInfoList searchBlog(@RequestBody List<Long> blogIdList,
         @RequestParam(value = "page", defaultValue = "0") int page) {
