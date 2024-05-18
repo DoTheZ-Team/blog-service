@@ -41,13 +41,13 @@ public class PostResponse {
         private List<PostItem> postItems;
 
         @Schema(description = "추가 목록이 있는 지의 여부")
-        private boolean hasNext;
+        private Boolean hasNext;
 
         @Schema(description = "첫 페이지인지의 여부")
-        private boolean hasFirst;
+        private Boolean isFirst;
 
         @Schema(description = "마지막 페이지인지의 여부")
-        private boolean hasLast;
+        private Boolean isLast;
     }
 
     @Getter

@@ -38,7 +38,7 @@ public class SwaggerConfig {
     private Info apiInfo() {
         return new Info()
             .title("Glue Blog-Service Springdoc 테스트")
-            .description("Springdoc을 사용한 Glue Blog-Service UI 테스트")
+            .description("Springdoc을 사용한 Glue Blog-Service UI 테스트 / Open Feign API는 Spring 서버 내에서 사용되는 API입니다.")
             .version("1.0.0");
     }
 }
