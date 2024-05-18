@@ -21,13 +21,13 @@ public class MemberDTO {
     private String nickname;
 
     @Schema(description = "사용자 프로필")
-    private String profile_url;
+    private String profileUrl;
 
     public static MemberDTO toMemberDTO(BlogRequest request) {
         return MemberDTO.builder()
             .email(request.getEmail())
             .nickname(request.getNickname())
-            .profile_url(request.getProfile_url())
+            .profileUrl(request.getProfileUrl())
             .build();
     }
 }

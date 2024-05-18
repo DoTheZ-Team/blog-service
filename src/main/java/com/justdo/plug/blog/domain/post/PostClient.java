@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface PostClient {
 
 
-    @PostMapping("/preview/subscriptions")
+    @PostMapping("/previews/subscriptions")
     PostItemList findSubscriptionFrom(@RequestBody List<Long> blogIdList, @RequestParam int page);
 
-    @PostMapping("/preview/subscribers")
+    @PostMapping("/previews/subscribers")
     PostItemList findSubscriptionTo(@RequestBody List<Long> memberIdList, @RequestParam int page);
 
     @GetMapping("/blogs/{blogId}")
