@@ -8,7 +8,7 @@ public class BlogRequest {
 
     private String email;
     private String nickname;
-    private String profile_url;
+    private String profileUrl;
     private String title;
     private String description;
     private String profile;
