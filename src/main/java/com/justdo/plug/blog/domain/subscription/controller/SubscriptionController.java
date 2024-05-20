@@ -61,7 +61,7 @@ public class SubscriptionController {
 
     @Operation(summary = "구독 페이지 - 내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
-    @GetMapping("/followers")
+    @GetMapping("/follows")
     public ApiResponse<BlogItemList> getFollowers(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
 
@@ -71,7 +71,7 @@ public class SubscriptionController {
 
     @Operation(summary = "구독 페이지 - 내가 구독한 블로그의 포스트 정보 조회", description = "내가 구독한 블로그의 포스트 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
-    @GetMapping("/followers/posts")
+    @GetMapping("/follows/posts")
     public ApiResponse<PostItemList> getFollowersPosts(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
 
@@ -100,7 +100,7 @@ public class SubscriptionController {
 
     @Operation(summary = "구독 페이지 - 나를 구독한 블로그 정보 조회", description = "나를 구독한 블로그 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
-    @GetMapping("/follows")
+    @GetMapping("/followers")
     public ApiResponse<BlogItemList> getFollows(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
 
@@ -112,7 +112,7 @@ public class SubscriptionController {
 
     @Operation(summary = "구독 페이지 - 나를 구독한 블로그의 포스트 정보 조회", description = "나를 구독한 블로그의 포스트 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
-    @GetMapping("/follows/posts")
+    @GetMapping("/followers/posts")
     public ApiResponse<PostItemList> getFollowsPosts(HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page) {
 
