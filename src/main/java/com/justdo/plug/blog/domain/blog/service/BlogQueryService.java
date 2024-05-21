@@ -9,6 +9,7 @@ import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
@@ -55,17 +56,18 @@ public class BlogQueryService {
         );
     }
 
-    // 구독 페이지에서 내가 구독하는 블로그의 정보
+    /** 구독 페이지에서 내가 구독하는 블로그의 정보 **/
     public BlogItemList getBlogInfoList(Long memberId, int page) {
 
         // 내가 구독한 블로그의 아이디 목록
         List<Long> blogIdList = subscriptionQueryService.getSubscriptionBlogIdList(
             memberId, page);
 
-        // 타블로그의 회원 목록
+        // 내가 구독한 블로그 조회
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
         Slice<Blog> blogs = blogRepository.findBlogIdList(blogIdList, pageRequest);
 
+        // 타블로그의 회원 목록 조회
         List<Long> memberIdList = blogs.stream()
             .map(Blog::getMemberId)
             .toList();
@@ -73,6 +75,20 @@ public class BlogQueryService {
 
         return BlogResponse.toBlogItemList(memberNicknames, blogs);
 
+    }
+
+    /** 구독 페이지 - 내가 구독한 or 나를 구독한 블로그의 포스트 정보 전달 시 블로그 정보 추가 전달**/
+    public List<BlogItem> getPostOfBlogInfoList(List<Long> blogIdList) {
+
+        List<Blog> blogList = blogRepository.findAllByBlogs(blogIdList);
+
+        List<Long> memberIdList = blogList.stream()
+                .map(Blog::getMemberId)
+                .toList();
+
+        List<String> memberNicknames = memberClient.findMemberNicknames(memberIdList);
+
+        return BlogResponse.toBlogItems(memberNicknames, blogList);
     }
 
     // 구독 페이지에서 나를 구독하는 블로그의 정보
@@ -115,6 +131,7 @@ public class BlogQueryService {
         return BlogResponse.toBlogInfoList(blogList);
     }
 
+    /** 블로그 페이지 - member, blog, post 정보 응답 **/
     public BlogPage findBlogPage(Long blogId) {
 
         Blog blog = findById(blogId);

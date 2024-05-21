@@ -24,15 +24,15 @@ public class BlogResponse {
     @Getter
     public static class MyBlogResult {
 
-        private MemberDTO memberDTOInfo;
+        private MemberDTO memberInfo;
         private BlogInfo blogInfo;
     }
 
-    public static MyBlogResult toMyBlogResult(MemberDTO memberDTOInfo, BlogInfo blogInfo) {
+    public static MyBlogResult toMyBlogResult(MemberDTO memberdto, BlogInfo blogInfo) {
         return MyBlogResult.builder()
-            .memberDTOInfo(memberDTOInfo)
-            .blogInfo(blogInfo)
-            .build();
+                .memberInfo(memberdto)
+                .blogInfo(blogInfo)
+                .build();
     }
 
     @Schema(description = "블로그 정보 응답 DTO")
@@ -58,11 +58,11 @@ public class BlogResponse {
     public static BlogInfo toBlogInfo(Blog blog) {
 
         return BlogInfo.builder()
-            .title(blog.getTitle())
-            .description(blog.getDescription())
-            .profile(blog.getProfile())
-            .background(blog.getBackground())
-            .build();
+                .title(blog.getTitle())
+                .description(blog.getDescription())
+                .profile(blog.getProfile())
+                .background(blog.getBackground())
+                .build();
     }
 
     @Schema(description = "블로그 정보 응답 페이징 DTO")
@@ -94,17 +94,17 @@ public class BlogResponse {
     public static BlogInfoList toBlogInfoList(Page<Blog> blogs) {
 
         List<BlogInfo> blogInfoList = blogs.getContent()
-            .stream()
-            .map(BlogResponse::toBlogInfo)
-            .toList();
+                .stream()
+                .map(BlogResponse::toBlogInfo)
+                .toList();
 
         return BlogInfoList.builder()
-            .blogInfoList(blogInfoList)
-            .listSize(blogInfoList.size())
-            .totalPage(blogs.getTotalPages())
-            .isFirst(blogs.isFirst())
-            .isLast(blogs.isLast())
-            .build();
+                .blogInfoList(blogInfoList)
+                .listSize(blogInfoList.size())
+                .totalPage(blogs.getTotalPages())
+                .isFirst(blogs.isFirst())
+                .isLast(blogs.isLast())
+                .build();
     }
 
     @Schema(description = "이미지 응답 DTO")
@@ -138,9 +138,9 @@ public class BlogResponse {
     public static BlogProc toBlogProc(Long blogId) {
 
         return BlogProc.builder()
-            .blogId(blogId)
-            .createdAt(LocalDateTime.now())
-            .build();
+                .blogId(blogId)
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 
     @Schema(description = "구독 페이지 블로그 정보 DTO")
@@ -166,11 +166,11 @@ public class BlogResponse {
     public static BlogItem toBlogItem(String nickname, Blog blog) {
 
         return BlogItem.builder()
-            .blogId(blog.getId())
-            .nickname(nickname)
-            .title(blog.getTitle())
-            .profile(blog.getProfile())
-            .build();
+                .blogId(blog.getId())
+                .nickname(nickname)
+                .title(blog.getTitle())
+                .profile(blog.getProfile())
+                .build();
     }
 
     @Schema(description = "구독 페이지 블로그의 정보 목록 DTO")
@@ -184,28 +184,36 @@ public class BlogResponse {
         private List<BlogItem> blogItems;
 
         @Schema(description = "추가 목록이 있는 지의 여부")
-        private boolean hasNext;
+        private Boolean hasNext;
 
         @Schema(description = "첫 페이지인지의 여부")
-        private boolean hasFirst;
+        private Boolean isFirst;
 
         @Schema(description = "마지막 페이지인지의 여부")
-        private boolean hasLast;
+        private Boolean isLast;
     }
 
     public static BlogItemList toBlogItemList(List<String> nicknames, Slice<Blog> blogs) {
 
         List<BlogItem> blogItems = IntStream.range(0,
-                Math.min(nicknames.size(), blogs.getContent().size()))
-            .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
-            .collect(Collectors.toList());
+                        Math.min(nicknames.size(), blogs.getContent().size()))
+                .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
+                .collect(Collectors.toList());
 
         return BlogItemList.builder()
-            .blogItems(blogItems)
-            .hasNext(blogs.hasNext())
-            .hasFirst(blogs.isFirst())
-            .hasLast(blogs.isLast())
-            .build();
+                .blogItems(blogItems)
+                .hasNext(blogs.hasNext())
+                .isFirst(blogs.isFirst())
+                .isLast(blogs.isLast())
+                .build();
+    }
+
+    public static List<BlogItem> toBlogItems(List<String> nicknames, List<Blog> blogs) {
+
+        return IntStream.range(0, blogs.size())
+                .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.get(i)))
+                .toList();
+
     }
 
     @Builder
@@ -220,13 +228,13 @@ public class BlogResponse {
     }
 
     public static BlogPage toBlogpage(BlogInfo blogInfo, BlogPostItem blogPostItem,
-        String memberName) {
+            String memberName) {
 
         return BlogPage.builder()
-            .blogInfo(blogInfo)
-            .blogPostItem(blogPostItem)
-            .memberName(memberName)
-            .build();
+                .blogInfo(blogInfo)
+                .blogPostItem(blogPostItem)
+                .memberName(memberName)
+                .build();
     }
 
 
