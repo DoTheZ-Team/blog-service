@@ -17,6 +17,9 @@ public class PostResponse {
     @Builder
     public static class PostItem {
 
+        @Schema(description = "블로그 아이디")
+        private Long blogId;
+
         @Schema(description = "포스트 아이디")
         private Long postId;
 
