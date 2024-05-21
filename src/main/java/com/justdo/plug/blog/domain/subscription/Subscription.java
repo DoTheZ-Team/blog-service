@@ -1,6 +1,7 @@
 package com.justdo.plug.blog.domain.subscription;
 
 import com.justdo.plug.blog.domain.common.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class Subscription extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "subscription_id")
     private Long id;
 
     @Builder.Default

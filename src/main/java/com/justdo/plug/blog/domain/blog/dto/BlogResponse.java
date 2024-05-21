@@ -24,13 +24,13 @@ public class BlogResponse {
     @Getter
     public static class MyBlogResult {
 
-        private MemberDTO memberDTOInfo;
+        private MemberDTO memberInfo;
         private BlogInfo blogInfo;
     }
 
-    public static MyBlogResult toMyBlogResult(MemberDTO memberDTOInfo, BlogInfo blogInfo) {
+    public static MyBlogResult toMyBlogResult(MemberDTO memberdto, BlogInfo blogInfo) {
         return MyBlogResult.builder()
-                .memberDTOInfo(memberDTOInfo)
+                .memberInfo(memberdto)
                 .blogInfo(blogInfo)
                 .build();
     }

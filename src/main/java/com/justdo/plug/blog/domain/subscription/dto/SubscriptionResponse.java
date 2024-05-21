@@ -77,7 +77,7 @@ public class SubscriptionResponse {
         private PostItem postItem;
     }
 
-    public static BlogPostPreview toSubscribedBlogPost(PostItem postItem,
+    public static BlogPostPreview toBlogPostPreview(PostItem postItem,
             BlogItem blogItem) {
 
         return BlogPostPreview.builder()
@@ -113,7 +113,7 @@ public class SubscriptionResponse {
 
         List<BlogPostPreview> blogPostPreviews = IntStream.range(0,
                         postItems.size())
-                .mapToObj(i -> toSubscribedBlogPost(postItems.get(i), blogItemList.get(i)))
+                .mapToObj(i -> toBlogPostPreview(postItems.get(i), blogItemList.get(i)))
                 .toList();
 
         return BlogPostItem.builder()
