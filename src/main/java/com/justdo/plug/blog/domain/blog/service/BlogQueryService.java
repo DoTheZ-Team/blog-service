@@ -9,6 +9,7 @@ import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
@@ -73,6 +74,20 @@ public class BlogQueryService {
 
         return BlogResponse.toBlogItemList(memberNicknames, blogs);
 
+    }
+
+    /** 구독 페이지 - 내가 구독한 블로그의 포스트 정보 전달 시 블로그 정보 추가 전달**/
+    public List<BlogItem> getPostOfBlogInfoList(List<Long> blogIdList) {
+
+        List<Blog> blogList = blogRepository.findAllByBlogs(blogIdList);
+
+        List<Long> memberIdList = blogList.stream()
+                .map(Blog::getMemberId)
+                .toList();
+
+        List<String> memberNicknames = memberClient.findMemberNicknames(memberIdList);
+
+        return BlogResponse.toBlogItems(memberNicknames, blogList);
     }
 
     // 구독 페이지에서 나를 구독하는 블로그의 정보
