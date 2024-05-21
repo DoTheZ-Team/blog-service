@@ -71,16 +71,16 @@ public class SubscriptionResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
-    public static class SubscribedBlogPost {
+    public static class BlogPostPreview {
 
         private BlogItem blogItem;
         private PostItem postItem;
     }
 
-    public static SubscribedBlogPost toSubscribedBlogPost(PostItem postItem,
+    public static BlogPostPreview toBlogPostPreview(PostItem postItem,
             BlogItem blogItem) {
 
-        return SubscribedBlogPost.builder()
+        return BlogPostPreview.builder()
                 .blogItem(blogItem)
                 .postItem(postItem)
                 .build();
@@ -94,7 +94,7 @@ public class SubscriptionResponse {
     public static class BlogPostItem {
 
         @Schema(description = "구독한 블로그 정보와 포스트 정보가 담긴 DTO")
-        private List<SubscribedBlogPost> subscribedBlogPosts;
+        private List<BlogPostPreview> blogPostPreviews;
 
         @Schema(description = "추가 목록이 있는 지의 여부")
         private Boolean hasNext;
@@ -111,13 +111,13 @@ public class SubscriptionResponse {
 
         List<PostItem> postItems = postItemList.getPostItems();
 
-        List<SubscribedBlogPost> subscribedBlogPosts = IntStream.range(0,
+        List<BlogPostPreview> blogPostPreviews = IntStream.range(0,
                         postItems.size())
-                .mapToObj(i -> toSubscribedBlogPost(postItems.get(i), blogItemList.get(i)))
+                .mapToObj(i -> toBlogPostPreview(postItems.get(i), blogItemList.get(i)))
                 .toList();
 
         return BlogPostItem.builder()
-                .subscribedBlogPosts(subscribedBlogPosts)
+                .blogPostPreviews(blogPostPreviews)
                 .hasNext(postItemList.getHasNext())
                 .isFirst(postItemList.getIsFirst())
                 .isLast(postItemList.getIsLast())
