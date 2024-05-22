@@ -1,9 +1,11 @@
 package com.justdo.plug.blog.domain.blog.dto;
 
 import com.justdo.plug.blog.domain.blog.Blog;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class BlogRequest {
 
     private String email;

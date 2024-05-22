@@ -53,6 +53,8 @@ dependencies {
 	// H2
 	testImplementation 'com.h2database:h2'
 
+	testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
+
 }
 
 dependencyManagement {
