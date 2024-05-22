@@ -4,6 +4,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
 import com.justdo.plug.blog.domain.blog.service.BlogCommandService;
@@ -81,6 +82,13 @@ public class BlogController {
         @RequestParam(value = "page", defaultValue = "0") int page) {
 
         return blogQueryService.searchBlogs(blogIdList, page);
+    }
+
+    @Operation(summary = "댓글 페이지 - Open Feign을 통해 사용되는 API입니다. (댓글 작성자의 블로그 정보 전달)", description = "댓글 작성자의 블로그 정보를 open feign으로 전달합니다.")
+    @PostMapping("/comments")
+    public List<CommentBlog> commentPost(@RequestBody List<Long> memberIdList) {
+
+        return blogQueryService.getCommentsBlog(memberIdList);
     }
 
 }
