@@ -25,8 +25,7 @@ public class Blog extends BaseTimeEntity {
     @Column(name = "blog_id")
     private Long id;
 
-    @Builder.Default
-    private String title = "블로그 제목을 입력해주세요.";
+    private String title;
 
     private String description;
 

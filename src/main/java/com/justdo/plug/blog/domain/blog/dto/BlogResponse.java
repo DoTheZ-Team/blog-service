@@ -237,5 +237,26 @@ public class BlogResponse {
                 .build();
     }
 
+    @Schema(description = "댓글의 블로그 정보 Request DTO - Open Feign을 통해 Post-Server로 전달 ")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class CommentBlog {
+
+        @Schema(description = "블로그 프로필")
+        private String profile;
+
+        @Schema(description = "블로그 제목")
+        private String title;
+    }
+
+    public static CommentBlog toCommentBlog(Blog blog) {
+
+        return CommentBlog.builder()
+                .profile(blog.getProfile())
+                .title(blog.getTitle())
+                .build();
+    }
 
 }

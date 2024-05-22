@@ -12,6 +12,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
 import com.justdo.plug.blog.domain.member.MemberDTO;
@@ -20,7 +21,10 @@ import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
 import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -141,5 +145,27 @@ public class BlogQueryService {
         String memberName = memberClient.findMemberName(blog.getMemberId());
 
         return toBlogpage(blogInfo, blogPostItem, memberName);
+    }
+
+    /** 댓글 페이지 - 댓글 작성자의 블로그 정보 전달**/
+    public List<CommentBlog> getCommentsBlog(List<Long> memberIdList) {
+
+        List<Blog> blogList = blogRepository.findAllByMemberIdList(memberIdList);
+
+        Map<Long, Blog> blogMap = blogList.stream()
+                .collect(Collectors.toMap(Blog::getMemberId, blog -> blog));
+
+        List<Blog> resultBlogs = new ArrayList<>();
+
+        for (Long memberId : memberIdList) {
+            Blog blog = blogMap.get(memberId);
+            if (blog != null) {
+                resultBlogs.add(blog);
+            }
+        }
+
+        return resultBlogs.stream()
+                .map(BlogResponse::toCommentBlog)
+                .toList();
     }
 }
