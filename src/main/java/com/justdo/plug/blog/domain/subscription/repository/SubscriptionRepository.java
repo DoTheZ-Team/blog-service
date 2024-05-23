@@ -13,4 +13,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     List<Subscription> findAllByFromMemberIdAndStateIsTrue(Long fromMemberId, PageRequest pageRequest);
 
     List<Subscription> findAllByToBlogIdAndStateIsTrue(Long toBlogId, PageRequest pageRequest);
+
+    List<Subscription> findFromAllByFromMemberIdAndStateIsTrue(Long fromMemberId);
+
 }
