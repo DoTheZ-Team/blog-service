@@ -17,16 +17,16 @@ public class PostResponse {
     @Builder
     public static class PostItem {
 
-        @Schema(description = "블로그 아이디")
+        @Schema(description = "블로그 아이디", example = "1")
         private Long blogId;
 
-        @Schema(description = "포스트 아이디")
+        @Schema(description = "포스트 아이디", example = "1")
         private Long postId;
 
-        @Schema(description = "포스트 제목")
+        @Schema(description = "포스트 제목", example = "오늘은 목요일 일상")
         private String title;
 
-        @Schema(description = "포스트 내용")
+        @Schema(description = "포스트 내용", example = "오늘은 목요일 포스트 내용, 무엇을 먹을까요?")
         private String preview;
 
         @Schema(description = "포스트 메인 사진")
