@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MemberDTO {
 
-    @Schema(description = "사용자 이메일")
+    @Schema(description = "사용자 이메일", example = "kakao@kakao.com")
     private String email;
 
-    @Schema(description = "사용자 닉네임")
+    @Schema(description = "사용자 닉네임", example = "myNickname")
     private String nickname;
 
     @Schema(description = "사용자 프로필")

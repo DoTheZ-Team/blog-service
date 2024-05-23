@@ -42,16 +42,16 @@ public class BlogResponse {
     @Getter
     public static class BlogInfo {
 
-        @Schema(description = "블로그 제목")
+        @Schema(description = "블로그 제목", example = "예영쓰 블로그")
         private String title;
 
-        @Schema(description = "블로그 설명")
+        @Schema(description = "블로그 설명", example = "예영쓰의 블로그 설명입니다.")
         private String description;
 
-        @Schema(description = "블로그 프로필")
+        @Schema(description = "블로그 프로필 (S3 URL)")
         private String profile;
 
-        @Schema(description = "블로그 배경 사진")
+        @Schema(description = "블로그 배경 사진 (S3 URL)")
         private String background;
     }
 
@@ -113,7 +113,7 @@ public class BlogResponse {
     @Getter
     public static class ImageResult {
 
-        @Schema(description = "저장된 이미지 경로")
+        @Schema(description = "저장된 이미지 경로", example = "https://glue-bucket-2024.s3.ap-northeast-2.amazonaws.com/kakao.png")
         private String imageUrl;
     }
 
@@ -128,7 +128,7 @@ public class BlogResponse {
     @Getter
     public static class BlogProc {
 
-        @Schema(description = "블로그 아이디")
+        @Schema(description = "블로그 아이디", example = "1")
         private Long blogId;
 
         @Schema(description = "응답 처리된 시간")
@@ -150,16 +150,16 @@ public class BlogResponse {
     @Getter
     public static class BlogItem {
 
-        @Schema(description = "블로그 아이디")
+        @Schema(description = "블로그 아이디", example = "1")
         private Long blogId;
 
-        @Schema(description = "블로그 사용자의 닉네임")
+        @Schema(description = "블로그 사용자의 닉네임", example = "예영2")
         private String nickname;
 
-        @Schema(description = "블로그의 제목")
+        @Schema(description = "블로그의 제목", example = "My Glog")
         private String title;
 
-        @Schema(description = "블로그 프로필")
+        @Schema(description = "블로그 프로필 (S3 URL)")
         private String profile;
     }
 

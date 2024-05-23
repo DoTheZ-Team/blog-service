@@ -49,7 +49,7 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(subscriptionCommandService.subscribe(memberId, blogId));
     }
 
-    @Operation(summary = "구독 페이지 - 내가 구독한 블로그와 포스트 정보 모두 조회", description = "내가 구독한 블로그와 포스트를 조회합니다.")
+    @Operation(summary = "구독 페이지 (All Component)- 내가 구독한 블로그와 포스트 정보 모두 조회", description = "내가 구독한 블로그와 포스트를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionFrom(
@@ -72,7 +72,7 @@ public class SubscriptionController {
                 SubscriptionResponse.toSubscriptionResult(blogItemList, blogPostItem));
     }
 
-    @Operation(summary = "구독 페이지 - 내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
+    @Operation(summary = "구독 페이지 (Left Component) - 내가 구독한 블로그 정보 조회", description = "내가 구독한 블로그의 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/follows")
     public ApiResponse<BlogItemList> getFollows(HttpServletRequest request,
@@ -82,7 +82,7 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(blogQueryService.getBlogInfoList(memberId, page));
     }
 
-    @Operation(summary = "구독 페이지 - 내가 구독한 블로그의 포스트 정보 조회", description = "내가 구독한 블로그의 포스트 정보를 조회합니다.")
+    @Operation(summary = "구독 페이지 (Right Component) - 내가 구독한 블로그의 포스트 정보 조회", description = "내가 구독한 블로그의 포스트 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/follows/posts")
     public ApiResponse<BlogPostItem> getFollowsPosts(HttpServletRequest request,
@@ -98,7 +98,7 @@ public class SubscriptionController {
                 SubscriptionResponse.toBlogPostItem(postItemList, blogItemList));
     }
 
-    @Operation(summary = "구독 페이지 - 나를 구독한 블로그와 포스트 모두 정보 조회", description = "나를 구독한 블로그와 포스트 정보를 모두 조회합니다.")
+    @Operation(summary = "구독 페이지 (All Component) - 나를 구독한 블로그와 포스트 모두 정보 조회", description = "나를 구독한 블로그와 포스트 정보를 모두 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/subscribers")
     public ApiResponse<SubscriptionResponse.SubscriptionResult> getSubscriptionTo(
@@ -120,7 +120,7 @@ public class SubscriptionController {
                 SubscriptionResponse.toSubscriptionResult(blogItemList, blogPostItem));
     }
 
-    @Operation(summary = "구독 페이지 - 나를 구독한 블로그 정보 조회", description = "나를 구독한 블로그 정보를 조회합니다.")
+    @Operation(summary = "구독 페이지 (Left Component) - 나를 구독한 블로그 정보 조회", description = "나를 구독한 블로그 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/followers")
     public ApiResponse<BlogItemList> getFollowers(HttpServletRequest request,
@@ -132,7 +132,7 @@ public class SubscriptionController {
         return ApiResponse.onSuccess(blogQueryService.getSubscriberBlogList(blogId, page));
     }
 
-    @Operation(summary = "구독 페이지 - 나를 구독한 블로그의 포스트 정보 조회", description = "나를 구독한 블로그의 포스트 정보를 조회합니다.")
+    @Operation(summary = "구독 페이지 (Right Component) - 나를 구독한 블로그의 포스트 정보 조회", description = "나를 구독한 블로그의 포스트 정보를 조회합니다.")
     @Parameter(name = "page", description = "페이지 번호, Query Parameter입니다.", example = "0", in = ParameterIn.QUERY)
     @GetMapping("/followers/posts")
     public ApiResponse<BlogPostItem> getFollowersPosts(HttpServletRequest request,
