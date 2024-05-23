@@ -13,12 +13,12 @@ public class RecommendationDTO {
     public static class RecommendationRequest {
 
         private Long blogId;
-        private List<Long> followsId;
+        private List<Long> followIds;
     }
 
-    public static RecommendationRequest toRecommendationRequest(Long blogId, List<Long> followsId) {
+    public static RecommendationRequest toRecommendationRequest(Long blogId, List<Long> followIds) {
 
-        return new RecommendationRequest(blogId, followsId);
+        return new RecommendationRequest(blogId, followIds);
     }
 
 }
