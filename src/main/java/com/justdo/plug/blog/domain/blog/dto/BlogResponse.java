@@ -237,7 +237,7 @@ public class BlogResponse {
                 .build();
     }
 
-    @Schema(description = "댓글의 블로그 정보 Request DTO - Open Feign을 통해 Post-Server로 전달 ")
+    @Schema(description = "댓글의 블로그 정보 Request DTO - Open Feign을 통해 Post-Server로 전달")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -256,6 +256,28 @@ public class BlogResponse {
         return CommentBlog.builder()
                 .profile(blog.getProfile())
                 .title(blog.getTitle())
+                .build();
+    }
+
+    @Schema(description = "블로그 매칭 시 보여줄 블로그 응답 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogRecommend {
+
+        private String profile;
+        private String title;
+        private String description;
+
+    }
+
+    public static BlogRecommend toBlogRecommend(Blog blog) {
+
+        return BlogRecommend.builder()
+                .profile(blog.getProfile())
+                .title(blog.getTitle())
+                .description(blog.getDescription())
                 .build();
     }
 

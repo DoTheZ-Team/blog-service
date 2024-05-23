@@ -12,12 +12,16 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogRecommend;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
 import com.justdo.plug.blog.domain.member.MemberDTO;
 import com.justdo.plug.blog.domain.post.PostClient;
 import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
+import com.justdo.plug.blog.domain.recommendation.RecommendationClient;
+import com.justdo.plug.blog.domain.recommendation.RecommendationDTO;
+import com.justdo.plug.blog.domain.recommendation.RecommendationDTO.RecommendationRequest;
 import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
@@ -42,6 +46,7 @@ public class BlogQueryService {
     private final SubscriptionQueryService subscriptionQueryService;
     private final MemberClient memberClient;
     private final PostClient postClient;
+    private final RecommendationClient recommendationClient;
 
     public MyBlogResult getBlogInfo(Long blogId) {
 
@@ -168,4 +173,29 @@ public class BlogQueryService {
                 .map(BlogResponse::toCommentBlog)
                 .toList();
     }
+
+    /** 블로그 매칭 서비스 **/
+    public List<BlogRecommend> findRecommendBlog(Long memberId) {
+
+        Long myBlogId = findBlogIdByMemberId(memberId);
+
+        List<Long> subscriptionBlogIdList = subscriptionQueryService.getMySubscriptionBlogIdList(
+                memberId);
+
+        RecommendationRequest request = RecommendationDTO.toRecommendationRequest(myBlogId,
+                subscriptionBlogIdList);
+
+        List<Long> recommendBlogIdList = recommendationClient.getRecommendBlogs(request);
+
+        return getRecommendBlogList(recommendBlogIdList);
+    }
+
+    private List<BlogRecommend> getRecommendBlogList(List<Long> blogIdList) {
+
+        return blogRepository.findAllByBlogs(blogIdList)
+                .stream()
+                .map(BlogResponse::toBlogRecommend)
+                .toList();
+    }
+
 }
