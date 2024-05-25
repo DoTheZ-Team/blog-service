@@ -9,7 +9,9 @@ import com.justdo.plug.blog.domain.subscription.Subscription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -77,8 +79,7 @@ public class SubscriptionResponse {
         private PostItem postItem;
     }
 
-    public static BlogPostPreview toBlogPostPreview(PostItem postItem,
-            BlogItem blogItem) {
+    public static BlogPostPreview toBlogPostPreview(BlogItem blogItem, PostItem postItem) {
 
         return BlogPostPreview.builder()
                 .blogItem(blogItem)
@@ -109,12 +110,8 @@ public class SubscriptionResponse {
     public static BlogPostItem toBlogPostItem(PostItemList postItemList,
             List<BlogItem> blogItemList) {
 
-        List<PostItem> postItems = postItemList.getPostItems();
-
-        List<BlogPostPreview> blogPostPreviews = IntStream.range(0,
-                        postItems.size())
-                .mapToObj(i -> toBlogPostPreview(postItems.get(i), blogItemList.get(i)))
-                .toList();
+        List<BlogPostPreview> blogPostPreviews = getBlogPostPreviews(postItemList.getPostItems(),
+                blogItemList);
 
         return BlogPostItem.builder()
                 .blogPostPreviews(blogPostPreviews)
@@ -122,6 +119,20 @@ public class SubscriptionResponse {
                 .isFirst(postItemList.getIsFirst())
                 .isLast(postItemList.getIsLast())
                 .build();
+    }
+
+    private static List<BlogPostPreview> getBlogPostPreviews(List<PostItem> postItemList,
+            List<BlogItem> blogItemList) {
+
+        Map<Long, BlogItem> blogItemMap = blogItemList.stream()
+                .collect(Collectors.toMap(BlogItem::getBlogId, Function.identity()));
+
+        return postItemList.stream()
+                .map(postItem -> {
+                    BlogItem blogItem = blogItemMap.get(postItem.getBlogId());
+                    return toBlogPostPreview(blogItem, postItem);
+                })
+                .collect(Collectors.toList());
     }
 }
 

@@ -4,6 +4,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.service.BlogQueryService;
 import com.justdo.plug.blog.domain.post.PostResponse.PostItemList;
+import com.justdo.plug.blog.domain.subscription.Subscription;
 import com.justdo.plug.blog.domain.subscription.dto.SubscriptionRequest;
 import com.justdo.plug.blog.domain.subscription.dto.SubscriptionResponse;
 import com.justdo.plug.blog.domain.subscription.dto.SubscriptionResponse.BlogPostItem;
@@ -61,10 +62,13 @@ public class SubscriptionController {
         BlogItemList blogItemList = blogQueryService.getBlogInfoList(memberId, page);
 
         /** 오른쪽 구독한 블로그의 포스트 정보**/
-        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostFrom(
-                memberId, page);
-        List<Long> postOfBlogIds = subscriptionQueryService.getPostOfBlogIds(postItemList);
+        List<Subscription> subscriptions = subscriptionQueryService.getMySubscriptions(memberId);
+        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostItems(
+                subscriptions, page);
+        List<Long> postOfBlogIds = subscriptionQueryService.getBlogIdsFromPostItemList(
+                postItemList);
         List<BlogItem> blogItems = blogQueryService.getPostOfBlogInfoList(postOfBlogIds);
+
         BlogPostItem blogPostItem = SubscriptionResponse.toBlogPostItem(postItemList,
                 blogItems);
 
@@ -89,9 +93,11 @@ public class SubscriptionController {
             @RequestParam(defaultValue = "0") int page) {
 
         Long memberId = jwtProvider.getUserIdFromToken(request);
-        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostFrom(
-                memberId, page);
-        List<Long> postOfBlogIds = subscriptionQueryService.getPostOfBlogIds(postItemList);
+        List<Subscription> subscriptions = subscriptionQueryService.getMySubscriptions(memberId);
+        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostItems(
+                subscriptions, page);
+        List<Long> postOfBlogIds = subscriptionQueryService.getBlogIdsFromPostItemList(
+                postItemList);
         List<BlogItem> blogItemList = blogQueryService.getPostOfBlogInfoList(postOfBlogIds);
 
         return ApiResponse.onSuccess(
@@ -108,10 +114,14 @@ public class SubscriptionController {
         Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
 
         BlogItemList blogItemList = blogQueryService.getSubscriberBlogList(blogId, page);
-        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostTo(
-                blogId, page);
 
-        List<Long> postOfBlogIds = subscriptionQueryService.getPostOfBlogIds(postItemList);
+        List<Subscription> subscriptions = subscriptionQueryService.getMySubscribers(
+                blogId);
+        PostItemList postItemList = subscriptionQueryService.getSubscriberPostItems(
+                subscriptions, page);
+
+        List<Long> postOfBlogIds = subscriptionQueryService.getBlogIdsFromPostItemList(
+                postItemList);
         List<BlogItem> blogItems = blogQueryService.getPostOfBlogInfoList(postOfBlogIds);
         BlogPostItem blogPostItem = SubscriptionResponse.toBlogPostItem(postItemList,
                 blogItems);
@@ -141,10 +151,12 @@ public class SubscriptionController {
         Long memberId = jwtProvider.getUserIdFromToken(request);
         Long blogId = blogQueryService.findBlogIdByMemberId(memberId);
 
-        PostItemList postItemList = subscriptionQueryService.getSubscriptionPostTo(blogId,
-                page);
+        List<Subscription> subscriptions = subscriptionQueryService.getMySubscribers(blogId);
+        PostItemList postItemList = subscriptionQueryService.getSubscriberPostItems(
+                subscriptions, page);
 
-        List<Long> postOfBlogIds = subscriptionQueryService.getPostOfBlogIds(postItemList);
+        List<Long> postOfBlogIds = subscriptionQueryService.getBlogIdsFromPostItemList(
+                postItemList);
         List<BlogItem> blogItemList = blogQueryService.getPostOfBlogInfoList(postOfBlogIds);
 
         return ApiResponse.onSuccess(
