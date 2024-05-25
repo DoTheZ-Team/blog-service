@@ -268,8 +268,13 @@ public class BlogResponse {
     @Getter
     public static class BlogRecommend {
 
+        @Schema(description = "추천하는 블로그의 프로필", example = "https://glue-bucket-2024.s3.ap-northeast-2.amazonaws.com/+next.png")
         private String profile;
+
+        @Schema(description = "추천하는 블로그의 제목", example = "김성민님의 블로그")
         private String title;
+
+        @Schema(description = "추천하는 블로그의 설명", example = "나의 블로그 설명 글")
         private String description;
 
     }
