@@ -95,6 +95,7 @@ public class BlogController {
         return blogQueryService.getCommentsBlog(memberIdList);
     }
 
+    @Operation(summary = "매칭 페이지 - 로그인한 사용자와 유사한 블로그를 최대 4개 추천하는 API입니다.", description = "매칭 페이지 해당하는 추천 블로그 정보를 최대 4개를 전달합니다.")
     @PostMapping("/recommendations")
     public ApiResponse<List<BlogRecommend>> recommendBlogs(HttpServletRequest request) {
 
