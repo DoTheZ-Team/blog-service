@@ -4,16 +4,19 @@ import com.justdo.plug.blog.domain.blog.dto.BlogRequest;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogProc;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogRecommend;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
 import com.justdo.plug.blog.domain.blog.service.BlogCommandService;
 import com.justdo.plug.blog.domain.blog.service.BlogQueryService;
 import com.justdo.plug.blog.global.response.ApiResponse;
+import com.justdo.plug.blog.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -36,6 +39,7 @@ public class BlogController {
 
     private final BlogCommandService blogCommandService;
     private final BlogQueryService blogQueryService;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "회원 가입 - Open feign 요청 (회원 가입 시 자동으로 블로그 생성을 요청합니다.)", description = "사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
     @PostMapping
@@ -89,6 +93,14 @@ public class BlogController {
     public List<CommentBlog> commentPost(@RequestBody List<Long> memberIdList) {
 
         return blogQueryService.getCommentsBlog(memberIdList);
+    }
+
+    @PostMapping("/recommendations")
+    public ApiResponse<List<BlogRecommend>> recommendBlogs(HttpServletRequest request) {
+
+        Long memberId = jwtProvider.getUserIdFromToken(request);
+
+        return ApiResponse.onSuccess(blogQueryService.findRecommendBlog(memberId));
     }
 
 }

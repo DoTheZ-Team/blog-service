@@ -3,6 +3,7 @@ package com.justdo.plug.blog.domain.blog.dto;
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.member.MemberDTO;
 import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
+import com.justdo.plug.blog.domain.subscription.Subscription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -193,18 +194,19 @@ public class BlogResponse {
         private Boolean isLast;
     }
 
-    public static BlogItemList toBlogItemList(List<String> nicknames, Slice<Blog> blogs) {
+    public static BlogItemList toBlogItemList(List<String> nicknames, List<Blog> blogs,
+            Slice<Subscription> subscriptionSlice) {
 
         List<BlogItem> blogItems = IntStream.range(0,
-                        Math.min(nicknames.size(), blogs.getContent().size()))
-                .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.getContent().get(i)))
+                        Math.min(nicknames.size(), blogs.size()))
+                .mapToObj(i -> toBlogItem(nicknames.get(i), blogs.get(i)))
                 .collect(Collectors.toList());
 
         return BlogItemList.builder()
                 .blogItems(blogItems)
-                .hasNext(blogs.hasNext())
-                .isFirst(blogs.isFirst())
-                .isLast(blogs.isLast())
+                .hasNext(subscriptionSlice.hasNext())
+                .isFirst(subscriptionSlice.isFirst())
+                .isLast(subscriptionSlice.isLast())
                 .build();
     }
 
@@ -237,7 +239,7 @@ public class BlogResponse {
                 .build();
     }
 
-    @Schema(description = "댓글의 블로그 정보 Request DTO - Open Feign을 통해 Post-Server로 전달 ")
+    @Schema(description = "댓글의 블로그 정보 Request DTO - Open Feign을 통해 Post-Server로 전달")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -256,6 +258,28 @@ public class BlogResponse {
         return CommentBlog.builder()
                 .profile(blog.getProfile())
                 .title(blog.getTitle())
+                .build();
+    }
+
+    @Schema(description = "블로그 매칭 시 보여줄 블로그 응답 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BlogRecommend {
+
+        private String profile;
+        private String title;
+        private String description;
+
+    }
+
+    public static BlogRecommend toBlogRecommend(Blog blog) {
+
+        return BlogRecommend.builder()
+                .profile(blog.getProfile())
+                .title(blog.getTitle())
+                .description(blog.getDescription())
                 .build();
     }
 

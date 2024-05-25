@@ -12,12 +12,17 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfoList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogRecommend;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
 import com.justdo.plug.blog.domain.member.MemberDTO;
 import com.justdo.plug.blog.domain.post.PostClient;
 import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
+import com.justdo.plug.blog.domain.recommendation.RecommendationClient;
+import com.justdo.plug.blog.domain.recommendation.RecommendationDTO;
+import com.justdo.plug.blog.domain.recommendation.RecommendationDTO.RecommendationRequest;
+import com.justdo.plug.blog.domain.subscription.Subscription;
 import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
@@ -42,6 +47,7 @@ public class BlogQueryService {
     private final SubscriptionQueryService subscriptionQueryService;
     private final MemberClient memberClient;
     private final PostClient postClient;
+    private final RecommendationClient recommendationClient;
 
     public MyBlogResult getBlogInfo(Long blogId) {
 
@@ -56,32 +62,38 @@ public class BlogQueryService {
 
     public Blog findById(Long blogId) {
         return blogRepository.findById(blogId).orElseThrow(
-            () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)
+                () -> new ApiException(ErrorStatus._BLOG_NOT_FOUND)
         );
     }
 
-    /** 구독 페이지에서 내가 구독하는 블로그의 정보 **/
+    /**
+     * 구독 페이지에서 내가 구독하는 블로그의 정보
+     **/
     public BlogItemList getBlogInfoList(Long memberId, int page) {
 
         // 내가 구독한 블로그의 아이디 목록
-        List<Long> blogIdList = subscriptionQueryService.getSubscriptionBlogIdList(
-            memberId, page);
+        Slice<Subscription> subscriptionList = subscriptionQueryService.getMySubscriptionsSlice(
+                memberId, page);
+        List<Long> blogIdList = subscriptionList.stream()
+                .map(Subscription::getToBlogId)
+                .toList();
 
         // 내가 구독한 블로그 조회
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
-        Slice<Blog> blogs = blogRepository.findBlogIdList(blogIdList, pageRequest);
+        List<Blog> blogs = blogRepository.findBlogIdList(blogIdList);
 
-        // 타블로그의 회원 목록 조회
+        // 타블로그의 회원 ID 목록 조회
         List<Long> memberIdList = blogs.stream()
-            .map(Blog::getMemberId)
-            .toList();
+                .map(Blog::getMemberId)
+                .toList();
         List<String> memberNicknames = memberClient.findMemberNicknames(memberIdList);
 
-        return BlogResponse.toBlogItemList(memberNicknames, blogs);
+        return BlogResponse.toBlogItemList(memberNicknames, blogs, subscriptionList);
 
     }
 
-    /** 구독 페이지 - 내가 구독한 or 나를 구독한 블로그의 포스트 정보 전달 시 블로그 정보 추가 전달**/
+    /**
+     * 구독 페이지 - 내가 구독한 or 나를 구독한 블로그의 포스트 정보 전달 시 블로그 정보 추가 전달
+     **/
     public List<BlogItem> getPostOfBlogInfoList(List<Long> blogIdList) {
 
         List<Blog> blogList = blogRepository.findAllByBlogs(blogIdList);
@@ -99,23 +111,26 @@ public class BlogQueryService {
     public BlogItemList getSubscriberBlogList(Long blogId, int page) {
 
         // 나를 구독한 블로그의 사용자 아이디 목록
-        List<Long> subscriberIds = subscriptionQueryService.getSubscriberBlogIdList(blogId, page);
+        Slice<Subscription> subscriberList = subscriptionQueryService.getMySubscribersSlice(blogId,
+                page);
+        List<Long> subscriberIds = subscriberList.stream()
+                .map(Subscription::getFromMemberId)
+                .toList();
 
-        // 타블로그의 회원 목록
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
-        Slice<Blog> blogs = blogRepository.findSubscriberIdList(subscriberIds, pageRequest);
+        // 타블로그의 회원 아이디 목록
+        List<Blog> blogs = blogRepository.findSubscriberIdList(subscriberIds);
 
         List<String> memberNicknames = getMemberNicknames(blogs);
 
-        return BlogResponse.toBlogItemList(memberNicknames, blogs);
+        return BlogResponse.toBlogItemList(memberNicknames, blogs, subscriberList);
 
     }
 
-    private List<String> getMemberNicknames(Slice<Blog> blogs) {
+    private List<String> getMemberNicknames(List<Blog> blogs) {
 
         List<Long> memberIdList = blogs.stream()
-            .map(Blog::getMemberId)
-            .toList();
+                .map(Blog::getMemberId)
+                .toList();
         return memberClient.findMemberNicknames(memberIdList);
     }
 
@@ -135,7 +150,9 @@ public class BlogQueryService {
         return BlogResponse.toBlogInfoList(blogList);
     }
 
-    /** 블로그 페이지 - member, blog, post 정보 응답 **/
+    /**
+     * 블로그 페이지 - member, blog, post 정보 응답
+     **/
     public BlogPage findBlogPage(Long blogId) {
 
         Blog blog = findById(blogId);
@@ -147,7 +164,9 @@ public class BlogQueryService {
         return toBlogpage(blogInfo, blogPostItem, memberName);
     }
 
-    /** 댓글 페이지 - 댓글 작성자의 블로그 정보 전달**/
+    /**
+     * 댓글 페이지 - 댓글 작성자의 블로그 정보 전달
+     **/
     public List<CommentBlog> getCommentsBlog(List<Long> memberIdList) {
 
         List<Blog> blogList = blogRepository.findAllByMemberIdList(memberIdList);
@@ -168,4 +187,31 @@ public class BlogQueryService {
                 .map(BlogResponse::toCommentBlog)
                 .toList();
     }
+
+    /**
+     * 블로그 매칭 서비스
+     **/
+    public List<BlogRecommend> findRecommendBlog(Long memberId) {
+
+        Long myBlogId = findBlogIdByMemberId(memberId);
+
+        List<Long> subscriptionBlogIdList = subscriptionQueryService.getMySubscriptionBlogIdList(
+                memberId);
+
+        RecommendationRequest request = RecommendationDTO.toRecommendationRequest(myBlogId,
+                subscriptionBlogIdList);
+
+        List<Long> recommendBlogIdList = recommendationClient.getRecommendBlogs(request);
+
+        return getRecommendBlogList(recommendBlogIdList);
+    }
+
+    private List<BlogRecommend> getRecommendBlogList(List<Long> blogIdList) {
+
+        return blogRepository.findAllByBlogs(blogIdList)
+                .stream()
+                .map(BlogResponse::toBlogRecommend)
+                .toList();
+    }
+
 }
