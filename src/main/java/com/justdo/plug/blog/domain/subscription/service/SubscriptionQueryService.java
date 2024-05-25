@@ -74,4 +74,12 @@ public class SubscriptionQueryService {
         return getSubscription(loginSubscription.getMemberId(),
                 loginSubscription.getBlogId()).isPresent();
     }
+
+    public List<Long> getMySubscriptionBlogIdList(Long memberId) {
+
+        return subscriptionRepository.findFromAllByFromMemberIdAndStateIsTrue(memberId)
+                .stream()
+                .map(Subscription::getToBlogId)
+                .toList();
+    }
 }
