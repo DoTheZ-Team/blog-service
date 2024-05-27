@@ -36,6 +36,39 @@ public class BlogResponse {
                 .build();
     }
 
+    @Schema(description = "마이페이지 수정 시 필요한 기본 사용자 정보 응답 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class MyPageResult {
+
+        @Schema(description = "사용자 닉네임", example = "myNickname")
+        private String nickname;
+
+        @Schema(description = "블로그 제목", example = "예영쓰 블로그")
+        private String title;
+
+        @Schema(description = "블로그 설명", example = "예영쓰의 블로그 설명입니다.")
+        private String description;
+
+        @Schema(description = "블로그 프로필 (S3 URL)")
+        private String profile;
+
+        @Schema(description = "블로그 배경 사진 (S3 URL)")
+        private String background;
+    }
+
+    public static MyPageResult toMyPageResult(MemberDTO memberdto, Blog blog) {
+
+        return MyPageResult.builder()
+                .nickname(memberdto.getNickname())
+                .description(blog.getDescription())
+                .profile(blog.getProfile())
+                .background(blog.getBackground())
+                .build();
+    }
+
     @Schema(description = "블로그 정보 응답 DTO")
     @Builder
     @AllArgsConstructor
