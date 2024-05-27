@@ -1,10 +1,9 @@
 package com.justdo.plug.blog.domain.blog.service;
 
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogInfo;
-import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyBlogResult;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toBlogInfo;
 import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toBlogpage;
-import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyBlogResult;
+import static com.justdo.plug.blog.domain.blog.dto.BlogResponse.toMyPageResult;
 
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
@@ -14,6 +13,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogPage;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogRecommend;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.CommentBlog;
+import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyPageResult;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
 import com.justdo.plug.blog.domain.member.MemberClient;
 import com.justdo.plug.blog.domain.member.MemberDTO;
@@ -49,15 +49,15 @@ public class BlogQueryService {
     private final PostClient postClient;
     private final RecommendationClient recommendationClient;
 
-    public MyBlogResult getBlogInfo(Long blogId) {
+    public MyPageResult getBlogInfo(Long blogId) {
 
         // 나의 블로그 정보 조회
-        BlogInfo blogInfo = toBlogInfo(findById(blogId));
+        Blog blog = findById(blogId);
 
         // 나의 개인 정보 조회
         MemberDTO memberDTOInfo = memberClient.findMember();
 
-        return toMyBlogResult(memberDTOInfo, blogInfo);
+        return toMyPageResult(memberDTOInfo, blog);
     }
 
     public Blog findById(Long blogId) {
