@@ -20,14 +20,10 @@ public class MemberDTO {
     @Schema(description = "사용자 닉네임", example = "myNickname")
     private String nickname;
 
-    @Schema(description = "사용자 프로필")
-    private String profileUrl;
-
     public static MemberDTO toMemberDTO(BlogRequest request) {
         return MemberDTO.builder()
             .email(request.getEmail())
             .nickname(request.getNickname())
-            .profileUrl(request.getProfileUrl())
             .build();
     }
 }
