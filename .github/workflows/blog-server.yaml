@@ -1,4 +1,4 @@
-name: Glue Blog Server CI/CD
+name: Glue Blog Server CI/CD Pipeline
 
 on:
   push:
