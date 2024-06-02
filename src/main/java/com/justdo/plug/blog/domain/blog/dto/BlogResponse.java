@@ -301,6 +301,9 @@ public class BlogResponse {
     @Getter
     public static class BlogRecommend {
 
+        @Schema(description = "추천하는 블로그의 아이디", example = "1")
+        private Long blogId;
+
         @Schema(description = "추천하는 블로그의 프로필", example = "https://glue-bucket-2024.s3.ap-northeast-2.amazonaws.com/+next.png")
         private String profile;
 
@@ -315,6 +318,7 @@ public class BlogResponse {
     public static BlogRecommend toBlogRecommend(Blog blog) {
 
         return BlogRecommend.builder()
+                .blogId(blog.getId())
                 .profile(blog.getProfile())
                 .title(blog.getTitle())
                 .description(blog.getDescription())
