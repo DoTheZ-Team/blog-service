@@ -63,6 +63,7 @@ public class BlogResponse {
 
         return MyPageResult.builder()
                 .nickname(memberdto.getNickname())
+                .title(blog.getTitle())
                 .description(blog.getDescription())
                 .profile(blog.getProfile())
                 .background(blog.getBackground())
