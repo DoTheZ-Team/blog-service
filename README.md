@@ -1,6 +1,6 @@
 <div align="center">
 
-# GLUE: Post Service
+# GLUE: Blog Service
 
 * GLUE 서비스의 Post Service project에 대해 소개합니다*
 
