@@ -119,6 +119,9 @@ public class BlogResponse {
         @Schema(description = "전체 데이터의 개수")
         private Long totalElements;
 
+        @Schema(description = "추가 목록이 있는 지의 여부")
+        private Boolean hasNext;
+
         @Schema(description = "첫 페이지의 여부")
         private Boolean isFirst;
 
@@ -137,6 +140,7 @@ public class BlogResponse {
                 .blogInfoList(blogInfoList)
                 .listSize(blogInfoList.size())
                 .totalPage(blogs.getTotalPages())
+                .hasNext(blogs.hasNext())
                 .isFirst(blogs.isFirst())
                 .isLast(blogs.isLast())
                 .build();
