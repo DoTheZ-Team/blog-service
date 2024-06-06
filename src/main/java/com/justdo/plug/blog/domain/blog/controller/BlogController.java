@@ -104,6 +104,7 @@ public class BlogController {
         return ApiResponse.onSuccess(blogQueryService.findRecommendBlog(memberId));
     }
 
+    @Operation(summary = "블로그 페이지 - Open Feign을 통해 사용되는 API입니다. (사용자의 블로그 아이디 전달)", description = "사용자의 블로그 정보를 open feign으로 전달합니다.")
     @GetMapping("/blogId/{memberId}")
     public ApiResponse<Long> getBlogId(@PathVariable Long memberId) {
         System.out.println("blogQueryService.getBlog(memberId) = " + blogQueryService.getBlog(memberId));
