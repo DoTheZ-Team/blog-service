@@ -104,4 +104,11 @@ public class BlogController {
         return ApiResponse.onSuccess(blogQueryService.findRecommendBlog(memberId));
     }
 
+    @GetMapping("/blogId/{memberId}")
+    public ApiResponse<Long> getBlogId(@PathVariable Long memberId) {
+        System.out.println("blogQueryService.getBlog(memberId) = " + blogQueryService.getBlog(memberId));
+        return ApiResponse.onSuccess(blogQueryService.getBlog(memberId));
+        
+    }
+
 }
