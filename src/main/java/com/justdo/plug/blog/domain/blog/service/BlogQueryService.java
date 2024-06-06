@@ -214,4 +214,14 @@ public class BlogQueryService {
                 .toList();
     }
 
+    public Long getBlog(Long memberId) {
+        Blog blog = blogRepository.findByMemberId(memberId);
+
+        if (blog == null) {
+            throw new ApiException(ErrorStatus._MEMBER_BLOG_NOT_FOUND);
+        }
+
+        return blog.getId();
+    }
+
 }
