@@ -41,14 +41,11 @@ public class BlogCommandService {
         return BlogResponse.toBlogProc(blogId);
     }
 
-    public BlogProc createBlog(Long memberId) {
+    public Long createBlog(Long memberId) {
 
         Blog blog = BlogRequest.toEntity(memberId);
-        save(blog);
-        return BlogResponse.toBlogProc(blog.getId());
+        Blog newBlog = blogRepository.save(blog);
+        return newBlog.getId();
     }
 
-    public void save(Blog blog) {
-        blogRepository.save(blog);
-    }
 }

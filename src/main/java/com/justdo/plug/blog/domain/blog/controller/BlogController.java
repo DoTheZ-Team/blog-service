@@ -43,9 +43,9 @@ public class BlogController {
 
     @Operation(summary = "회원 가입 - Open feign 요청 (회원 가입 시 자동으로 블로그 생성을 요청합니다.)", description = "사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
     @PostMapping
-    public ApiResponse<BlogProc> createBlog(@RequestParam Long memberId) {
+    public Long createBlog(@RequestParam Long memberId) {
 
-        return ApiResponse.onSuccess(blogCommandService.createBlog(memberId));
+        return blogCommandService.createBlog(memberId);
     }
 
     @Operation(summary = "블로그 페이지 - Blog 정보, 최신 4개의 Post, MemberName을 조회합니다..", description = "블로그 페이지를 조회합니다")
@@ -107,7 +107,7 @@ public class BlogController {
     @Operation(summary = "블로그 페이지 - Open Feign을 통해 사용되는 API입니다. (사용자의 블로그 아이디 전달)", description = "사용자의 블로그 정보를 open feign으로 전달합니다.")
     @GetMapping("members/{memberId}")
     public Long getBlogId(@PathVariable Long memberId) {
-        System.out.println("blogQueryService.getBlog(memberId) = " + blogQueryService.getBlog(memberId));
+
         return blogQueryService.getBlog(memberId);
         
     }
