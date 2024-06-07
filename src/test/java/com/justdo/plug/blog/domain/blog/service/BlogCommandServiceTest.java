@@ -14,9 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.event.annotation.AfterTestClass;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
-import org.springframework.test.context.event.annotation.PrepareTestInstance;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,15 +75,15 @@ class BlogCommandServiceTest {
     void testUpdateBlog(){
         // Given
         Long blogId = 1L;
-        BlogRequest request = BlogRequest.builder()
-                .email("email@example.com")
-                .nickname("nickname")
-                .profileUrl("http://profile.url")
-                .title("title")
-                .description("description")
-                .profile("profile")
-                .background("background")
-                .build();
+        BlogRequest request = new BlogRequest();
+        ReflectionTestUtils.setField(request, "title", "New Title");
+        ReflectionTestUtils.setField(request, "description", "New Description");
+        ReflectionTestUtils.setField(request, "profile", "New Profile");
+        ReflectionTestUtils.setField(request, "background", "New Background");
+        ReflectionTestUtils.setField(request, "email", "test@example.com");
+        ReflectionTestUtils.setField(request, "nickname", "nickname");
+        ReflectionTestUtils.setField(request, "profileUrl", "profileUrl");
+
         Blog blog = mock(Blog.class);
         when(blogQueryService.findById(blogId)).thenReturn(blog);
 
@@ -105,7 +103,14 @@ class BlogCommandServiceTest {
     void testCreateBlog() {
         // Given
         Long memberId = 1L;
-        Blog blog = mock(Blog.class);
+        Blog blog = Blog.builder()
+                .memberId(memberId)
+                .title("title")
+                .description("description")
+                .profile("profile")
+                .background("background")
+                .build();
+
         when(BlogRequest.toEntity(memberId)).thenReturn(blog);
 
         // When
