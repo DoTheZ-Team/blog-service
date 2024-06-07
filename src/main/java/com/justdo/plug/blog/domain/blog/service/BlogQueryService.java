@@ -58,6 +58,7 @@ public class BlogQueryService {
         MemberDTO memberDTOInfo = memberClient.findMember();
 
         return toMyPageResult(memberDTOInfo, blog);
+
     }
 
     public Blog findById(Long blogId) {

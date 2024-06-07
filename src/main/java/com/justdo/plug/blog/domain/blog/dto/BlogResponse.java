@@ -76,6 +76,8 @@ public class BlogResponse {
     @NoArgsConstructor
     @Getter
     public static class BlogInfo {
+        @Schema(description = "블로그 아이디", example = "1")
+        private Long id;
 
         @Schema(description = "블로그 제목", example = "예영쓰 블로그")
         private String title;
@@ -93,6 +95,7 @@ public class BlogResponse {
     public static BlogInfo toBlogInfo(Blog blog) {
 
         return BlogInfo.builder()
+                .id(blog.getId())
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .profile(blog.getProfile())
