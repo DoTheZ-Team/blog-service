@@ -53,13 +53,35 @@ public class PostResponse {
         private Boolean isLast;
     }
 
+    @Schema(description = "포스트 정보(사진 5개) 목록 DTO")
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostItemBy5Photo {
+
+        @Schema(description = "Blog 아이디")
+        private Long blogId;
+
+        @Schema(description = "Post 아이디")
+        private Long postId;
+
+        @Schema(description = "Post 제목")
+        private String title;
+
+        @Schema(description = "Post 글 미리보기")
+        private String preview;
+
+        @Schema(description = "Post의 추가된 사진 경로 리스트")
+        private List<String> photoUrl;
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
     public static class BlogPostItem {
 
-        private List<PostItem> postItems;
+        private List<PostItemBy5Photo> postItems;
         private List<String> hashtagNames;
     }
 
