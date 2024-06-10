@@ -3,6 +3,7 @@ package com.justdo.plug.blog.domain.blog.dto;
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.member.MemberDTO;
 import com.justdo.plug.blog.domain.post.PostResponse.BlogPostItem;
+import com.justdo.plug.blog.domain.post.PostResponse.PostItemBy5Photo;
 import com.justdo.plug.blog.domain.subscription.Subscription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -76,8 +77,9 @@ public class BlogResponse {
     @NoArgsConstructor
     @Getter
     public static class BlogInfo {
+
         @Schema(description = "블로그 아이디", example = "1")
-        private Long id;
+        private Long blogId;
 
         @Schema(description = "블로그 제목", example = "예영쓰 블로그")
         private String title;
@@ -95,7 +97,7 @@ public class BlogResponse {
     public static BlogInfo toBlogInfo(Blog blog) {
 
         return BlogInfo.builder()
-                .id(blog.getId())
+                .blogId(blog.getId())
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .profile(blog.getProfile())
@@ -259,24 +261,37 @@ public class BlogResponse {
 
     }
 
+    @Schema(description = "블로그 페이지 - Stories, Albums, Hashtags 등 블로그 정보 응답 DTO")
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     public static class BlogPage {
 
-        private BlogInfo blogInfo;
-        private BlogPostItem blogPostItem;
+        @Schema(description = "로그인 한 사용자의 블로그 아이디", example = "1")
+        private Long loginBlogId;
+
+        @Schema(description = "로그인 한 사용자의 이름", example = "예영2")
         private String memberName;
+
+        @Schema(description = "로그인 한 사용자의 블로그 구독 여부")
+        private Boolean isSubscribe;
+
+        private BlogInfo blogInfo;
+        private List<PostItemBy5Photo> postItems;
+        private List<String> hashtagNames;
     }
 
-    public static BlogPage toBlogpage(BlogInfo blogInfo, BlogPostItem blogPostItem,
-            String memberName) {
+    public static BlogPage toBlogpage(Long loginBlogId, String memberName, Boolean isSubscribe,
+            BlogInfo blogInfo, BlogPostItem blogPostItem) {
 
         return BlogPage.builder()
-                .blogInfo(blogInfo)
-                .blogPostItem(blogPostItem)
+                .loginBlogId(loginBlogId)
                 .memberName(memberName)
+                .isSubscribe(isSubscribe)
+                .blogInfo(blogInfo)
+                .postItems(blogPostItem.getPostItems())
+                .hashtagNames(blogPostItem.getHashtagNames())
                 .build();
     }
 

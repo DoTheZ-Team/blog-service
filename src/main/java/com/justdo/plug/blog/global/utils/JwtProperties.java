@@ -6,4 +6,6 @@ public interface JwtProperties {
     String HEADER_AUTHORIZATION = "Authorization";
     String MEMBER_ID = "memberId";
     Integer TOKEN_SPLIT = 7;
+
+    String BLOG_ID = "blogId";
 }

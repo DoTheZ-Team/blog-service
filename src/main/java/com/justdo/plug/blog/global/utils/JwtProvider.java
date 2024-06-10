@@ -1,5 +1,6 @@
 package com.justdo.plug.blog.global.utils;
 
+import static com.justdo.plug.blog.global.utils.JwtProperties.BLOG_ID;
 import static com.justdo.plug.blog.global.utils.JwtProperties.HEADER_AUTHORIZATION;
 import static com.justdo.plug.blog.global.utils.JwtProperties.MEMBER_ID;
 import static com.justdo.plug.blog.global.utils.JwtProperties.TOKEN_PREFIX;
@@ -36,6 +37,13 @@ public class JwtProvider {
         return validateToken(accessToken);
     }
 
+    public Long getBlogIdFromToken(HttpServletRequest request) {
+
+        String accessToken = parseToken(request);
+
+        return validateTokenWithBlogId(accessToken);
+    }
+
     private String parseToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
         if (bearerToken == null || !bearerToken.startsWith(TOKEN_PREFIX)) {
@@ -49,6 +57,21 @@ public class JwtProvider {
         try {
             return Jwts.parser().verifyWith(key).build().parseSignedClaims(accessToken)
                     .getPayload().get(MEMBER_ID, Long.class);
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new JwtException("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            throw new JwtException("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("JWT 토큰이 잘못되었습니다.");
+        }
+    }
+
+    public Long validateTokenWithBlogId(String accessToken) {
+        try {
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(accessToken)
+                    .getPayload().get(BLOG_ID, Long.class);
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             throw new JwtException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {

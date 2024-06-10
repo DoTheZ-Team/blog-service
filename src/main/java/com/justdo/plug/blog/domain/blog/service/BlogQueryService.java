@@ -154,7 +154,7 @@ public class BlogQueryService {
     /**
      * 블로그 페이지 - member, blog, post 정보 응답
      **/
-    public BlogPage findBlogPage(Long blogId) {
+    public BlogPage findBlogPage(Long blogId, Long loginMemberId, Long loginBlogId) {
 
         Blog blog = findById(blogId);
 
@@ -162,7 +162,10 @@ public class BlogQueryService {
         BlogPostItem blogPostItem = postClient.findBlogPostItem(blogId);
         String memberName = memberClient.findMemberName(blog.getMemberId());
 
-        return toBlogpage(blogInfo, blogPostItem, memberName);
+        boolean isSubscribe = subscriptionQueryService.getSubscription(loginMemberId, blogId)
+                .isPresent();
+
+        return toBlogpage(loginBlogId, memberName, isSubscribe, blogInfo, blogPostItem);
     }
 
     /**
