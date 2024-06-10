@@ -10,6 +10,7 @@ import com.justdo.plug.blog.domain.blog.dto.BlogResponse.ImageResult;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.MyPageResult;
 import com.justdo.plug.blog.domain.blog.service.BlogCommandService;
 import com.justdo.plug.blog.domain.blog.service.BlogQueryService;
+import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.response.ApiResponse;
 import com.justdo.plug.blog.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,7 @@ public class BlogController {
 
     private final BlogCommandService blogCommandService;
     private final BlogQueryService blogQueryService;
+    private final SubscriptionQueryService subscriptionQueryService;
     private final JwtProvider jwtProvider;
 
     @Operation(summary = "회원 가입 - Open feign 요청 (회원 가입 시 자동으로 블로그 생성을 요청합니다.)", description = "사용자 회원가입 시 자동으로 하나의 블로그가 생성됩니다.")
@@ -50,9 +52,14 @@ public class BlogController {
 
     @Operation(summary = "블로그 페이지 - Blog 정보, 최신 4개의 Post, MemberName을 조회합니다..", description = "블로그 페이지를 조회합니다")
     @GetMapping("/{blogId}")
-    public ApiResponse<BlogPage> getBlogPage(@PathVariable Long blogId) {
+    public ApiResponse<BlogPage> getBlogPage(HttpServletRequest request,
+            @PathVariable Long blogId) {
 
-        return ApiResponse.onSuccess(blogQueryService.findBlogPage(blogId));
+        Long loginMemberId = jwtProvider.getUserIdFromToken(request);
+        Long loginBlogId = jwtProvider.getBlogIdFromToken(request);
+
+        return ApiResponse.onSuccess(
+                blogQueryService.findBlogPage(blogId, loginMemberId, loginBlogId));
     }
 
     @Operation(summary = "마이 페이지 - 사용자 및 블로그 정보를 조회합니다.", description = "마이페이지에 보여줄 사용자 및 블로그 개인 정보를 조회합니다.")
@@ -109,7 +116,7 @@ public class BlogController {
     public Long getBlogId(@PathVariable Long memberId) {
 
         return blogQueryService.getBlog(memberId);
-        
+
     }
 
 }
