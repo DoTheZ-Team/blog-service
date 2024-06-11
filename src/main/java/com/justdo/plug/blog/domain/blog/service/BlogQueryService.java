@@ -29,6 +29,7 @@ import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -157,13 +158,13 @@ public class BlogQueryService {
     public BlogPage findBlogPage(Long blogId, Long loginMemberId, Long loginBlogId) {
 
         Blog blog = findById(blogId);
-
         BlogInfo blogInfo = toBlogInfo(blog);
         BlogPostItem blogPostItem = postClient.findBlogPostItem(blogId);
         String memberName = memberClient.findMemberName(blog.getMemberId());
 
-        boolean isSubscribe = subscriptionQueryService.getSubscription(loginMemberId, blogId)
-                .isPresent();
+        boolean isSubscribe = Optional.ofNullable(loginMemberId)
+                .map(mid -> subscriptionQueryService.getSubscription(mid, blogId).isPresent())
+                .orElse(false);
 
         return toBlogpage(loginBlogId, memberName, isSubscribe, blogInfo, blogPostItem);
     }
