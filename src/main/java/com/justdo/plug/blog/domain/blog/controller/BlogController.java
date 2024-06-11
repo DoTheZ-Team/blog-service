@@ -55,8 +55,8 @@ public class BlogController {
     public ApiResponse<BlogPage> getBlogPage(HttpServletRequest request,
             @PathVariable Long blogId) {
 
-        Long loginMemberId = jwtProvider.getUserIdFromToken(request);
-        Long loginBlogId = jwtProvider.getBlogIdFromToken(request);
+        Long loginMemberId = jwtProvider.getUserIdFromTokenNullCheck(request);
+        Long loginBlogId = jwtProvider.getBlogIdFromTokenNullCheck(request);
 
         return ApiResponse.onSuccess(
                 blogQueryService.findBlogPage(blogId, loginMemberId, loginBlogId));

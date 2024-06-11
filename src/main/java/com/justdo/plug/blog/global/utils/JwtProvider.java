@@ -37,11 +37,26 @@ public class JwtProvider {
         return validateToken(accessToken);
     }
 
-    public Long getBlogIdFromToken(HttpServletRequest request) {
+    public Long getUserIdFromTokenNullCheck(HttpServletRequest request) {
 
-        String accessToken = parseToken(request);
+        String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
 
-        return validateTokenWithBlogId(accessToken);
+        if (bearerToken == null || bearerToken.isEmpty()) {
+            return null;
+        } else {
+            return validateToken(bearerToken.substring(TOKEN_SPLIT));
+        }
+    }
+
+    public Long getBlogIdFromTokenNullCheck(HttpServletRequest request) {
+
+        String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
+
+        if (bearerToken == null || bearerToken.isEmpty()) {
+            return null;
+        } else {
+            return validateTokenWithBlogId(bearerToken.substring(TOKEN_SPLIT));
+        }
     }
 
     private String parseToken(HttpServletRequest request) {
