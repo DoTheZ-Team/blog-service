@@ -1,5 +1,13 @@
 package com.justdo.plug.blog.domain.blog.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse;
 import com.justdo.plug.blog.domain.blog.repository.BlogRepository;
@@ -9,6 +17,8 @@ import com.justdo.plug.blog.domain.post.PostClient;
 import com.justdo.plug.blog.domain.subscription.service.SubscriptionQueryService;
 import com.justdo.plug.blog.global.exception.ApiException;
 import com.justdo.plug.blog.global.response.code.status.ErrorStatus;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +29,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class BlogQueryServiceTest {
 
@@ -51,7 +55,7 @@ class BlogQueryServiceTest {
 
     @Test
     @DisplayName("특정 블로그 정보 조회")
-    void getBlogInfo_BlogExists_ReturnsMyBlogResult(){
+    void getBlogInfo_BlogExists_ReturnsMyBlogResult() {
         // Given
         Long memberId = 1L;
         Blog blog = Blog.builder()
@@ -97,15 +101,14 @@ class BlogQueryServiceTest {
         verify(blogRepository, times(1)).findById(blogId);
     }
 
-
     @Test
     @DisplayName("memberId 기준 구독한 블로그 목록 조회")
-    void getBlogInfoList_Success(){
+    void getBlogInfoList_Success() {
         // Given
         Long memberId = 1L;
         int page = 0;
 
-        List<Long> blogIdList = List.of(1L,2L,3L);
+        List<Long> blogIdList = List.of(1L, 2L, 3L);
         List<Blog> blogs = List.of(
                 Blog.builder().id(1L).memberId(1L).title("title1").build(),
                 Blog.builder().id(2L).memberId(2L).title("title2").build(),
@@ -115,9 +118,10 @@ class BlogQueryServiceTest {
         List<String> memberNicknames = List.of("nickname1", "nickname2", "nickname3");
 
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("createdAt"));
-        Slice<Blog> blogSlice = new SliceImpl<>(blogs, pageRequest, true);
+        Slice<Blog> blogSlice = new SliceImpl<>(blogs, pageRequest, false);
 
-        when(subscriptionQueryService.getSubscriptionBlogIdList(memberId, page)).thenReturn(blogIdList);
+        when(subscriptionQueryService.getSubscriptionBlogIdList(memberId, page)).thenReturn(
+                blogIdList);
         when(blogRepository.findBlogIdList(blogIdList, pageRequest)).thenReturn(blogSlice);
         when(memberClient.findMemberNicknames(anyList())).thenReturn(memberNicknames);
 

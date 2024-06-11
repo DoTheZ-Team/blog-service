@@ -1,25 +1,23 @@
 package com.justdo.plug.blog.domain.blog.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.justdo.plug.blog.domain.blog.Blog;
-import org.junit.jupiter.api.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE,
-        connection = EmbeddedDatabaseConnection.H2)
 @ActiveProfiles("test")
 class BlogRepositoryTest {
 
@@ -45,8 +43,8 @@ class BlogRepositoryTest {
                 .title("Blog 3")
                 .build();
 
-
         blogRepository.saveAll(Arrays.asList(blog1, blog2, blog3));
+        System.out.println("---Test Data Setting---");
     }
 
     @Test
@@ -101,7 +99,9 @@ class BlogRepositoryTest {
 
         // Then
         assertThat(blogs).hasSize(2);
+        assertThat(blogs.getTotalElements()).isEqualTo(2);
         assertThat(blogs.getContent()).containsExactlyInAnyOrder(blog1, blog3);
+        assertThat(blogs.getContent().get(0).getId()).isEqualTo(1L);
     }
 
     @Test
@@ -128,6 +128,9 @@ class BlogRepositoryTest {
 
         // Then
         assertThat(blog).isNull();
+        assertThatThrownBy(() -> {
+            blog.getId();
+        }).isInstanceOf(NullPointerException.class);
     }
 
     @Test
