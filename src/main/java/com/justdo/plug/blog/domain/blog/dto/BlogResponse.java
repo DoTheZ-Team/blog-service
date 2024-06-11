@@ -271,10 +271,10 @@ public class BlogResponse {
         @Schema(description = "로그인 한 사용자의 블로그 아이디", example = "1")
         private Long loginBlogId;
 
-        @Schema(description = "로그인 한 사용자의 이름", example = "예영2")
+        @Schema(description = "블로그 주인의 사용자 이름", example = "예영2")
         private String memberName;
 
-        @Schema(description = "로그인 한 사용자의 블로그 구독 여부")
+        @Schema(description = "로그인 한 사용자의 해당 블로그 구독 여부")
         private Boolean isSubscribe;
 
         private BlogInfo blogInfo;

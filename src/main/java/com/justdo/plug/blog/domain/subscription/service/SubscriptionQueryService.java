@@ -79,7 +79,9 @@ public class SubscriptionQueryService {
     }
 
     public Optional<Subscription> getSubscription(Long memberId, Long blogId) {
-        return subscriptionRepository.findByFromMemberIdAndToBlogId(memberId, blogId);
+
+        return Optional.ofNullable(memberId)
+                .flatMap(mid -> subscriptionRepository.findByFromMemberIdAndToBlogId(mid, blogId));
     }
 
     public Boolean findLoginSubscribe(LoginSubscription loginSubscription) {
