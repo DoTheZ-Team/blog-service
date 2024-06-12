@@ -134,5 +134,26 @@ public class SubscriptionResponse {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Schema(description = "구독 확인 여부 및 프로필 DTO")
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class SubscribedProfile {
+
+        private boolean isSubscribed;
+
+        private String profile;
+    }
+
+    public static SubscribedProfile toSubscribedProfile(boolean isSubscribed, String profile) {
+
+        return SubscribedProfile.builder()
+                .isSubscribed(isSubscribed)
+                .profile(profile)
+                .build();
+    }
+
 }
 
