@@ -1,5 +1,6 @@
 package com.justdo.plug.blog.domain.subscription.controller;
 
+import com.justdo.plug.blog.domain.blog.Blog;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItem;
 import com.justdo.plug.blog.domain.blog.dto.BlogResponse.BlogItemList;
 import com.justdo.plug.blog.domain.blog.service.BlogQueryService;
@@ -165,8 +166,14 @@ public class SubscriptionController {
 
     @Operation(summary = "구독 페이지 - Open feign요청입니다.(로그인한 사용자가 구독한 블로그인지 확인)", description = "로그인한 사용자가 구독한 블로그인지 확인합니다.")
     @PostMapping
-    public Boolean getLoginSubscribed(
+    public SubscriptionResponse.SubscribedProfile getLoginSubscribed(
             @RequestBody SubscriptionRequest.LoginSubscription loginSubscription) {
-        return subscriptionQueryService.findLoginSubscribe(loginSubscription);
+        boolean isSubscribed =  subscriptionQueryService.findLoginSubscribe(loginSubscription);
+
+        Blog blog = blogQueryService.findById(loginSubscription.getBlogId());
+        String profile = blog.getProfile();
+
+        return SubscriptionResponse.toSubscribedProfile(isSubscribed, profile);
     }
+
 }
